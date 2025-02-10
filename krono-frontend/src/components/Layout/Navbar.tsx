@@ -22,7 +22,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="sticky top-0 z-20 flex h-20 w-full items-center justify-between border-b-2 px-5 shadow-sm">
+    <nav className="sticky top-0 z-20 flex h-20 w-full items-center justify-between border-b-2 bg-background px-5 shadow-sm">
       <div className="flex items-center gap-2 font-medium">
         <Link href={"/"}>
           <Image
@@ -30,7 +30,7 @@ const Navbar = () => {
             alt="Krono Finance"
             width={200}
             height={50}
-            className="mr-3"
+            className="mr-4"
           />
         </Link>
         {menus.map((menu) => (
@@ -38,7 +38,7 @@ const Navbar = () => {
             key={menu.name}
             href={menu.link}
             className={classNames(
-              "mt-2 rounded-md px-3 py-1.5 hover:bg-primary-active hover:text-white",
+              "mt-[5px] rounded-md px-3 py-1.5 hover:bg-primary-active hover:text-white",
               pathname === menu.link
                 ? "bg-primary-active text-white"
                 : "bg-transparent text-secondary",

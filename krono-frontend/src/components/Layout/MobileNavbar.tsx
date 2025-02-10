@@ -22,7 +22,7 @@ const MobileNavbar = () => {
   ];
 
   return (
-    <nav className="sticky top-0 z-20 flex h-[70px] w-full items-center justify-between border-b-2 px-4 shadow-sm">
+    <nav className="sticky top-0 z-20 flex h-[74px] w-full items-center justify-between border-b-2 bg-background px-4 shadow-sm">
       <Link href={"/"}>
         <Image
           src={"/logo/krono-finance.svg"}

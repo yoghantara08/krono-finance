@@ -1,7 +1,7 @@
 import React from "react";
 
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Inter } from "next/font/google";
 
 import LayoutWrapper from "@/components/Layout/LayoutWrapper";
 
@@ -9,16 +9,14 @@ import { Providers } from "./providers";
 
 import "./globals.css";
 
-// TODO: CHANGE TO YOUR FONT
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   title: "Krono Finance",
-  description:
-    "Krono Finance is Lending and Borrow DeFi Protocol!",
+  description: "Krono Finance is Lending and Borrow DeFi Protocol!",
 };
 
 export default function RootLayout({
@@ -28,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} antialiased`}>
+      <body className={`${inter.variable} antialiased`}>
         <Providers>
           <LayoutWrapper>{children}</LayoutWrapper>
         </Providers>

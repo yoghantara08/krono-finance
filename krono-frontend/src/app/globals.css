@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --rk-font-weight-body: 400;
+}
+
 * {
   scroll-behavior: smooth;
   @apply border-border text-white;

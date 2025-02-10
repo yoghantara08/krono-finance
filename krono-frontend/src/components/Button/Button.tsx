@@ -29,20 +29,20 @@ const Button = ({
       onClick={!disabled ? onClick : undefined}
       disabled={disabled}
       className={classNames(
-        "inline-flex items-center justify-center rounded-md px-4 py-2",
-        "text-sm font-medium transition-colors",
+        "inline-flex items-center justify-center rounded-md px-4 py-3",
+        "text-sm font-medium transition-colors md:text-base",
         "focus:outline-none",
         {
           // Primary variant
-          "bg-blue-600 text-white hover:bg-blue-700":
+          "bg-primary hover:bg-primary-hover":
             variant === "primary" && !disabled,
-          "cursor-not-allowed bg-blue-400 text-gray-100":
+          "bg-primary/80 text-secondary cursor-not-allowed":
             variant === "primary" && disabled,
 
           // Secondary variant
-          "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50":
+          "border-primary/60 bg-primary/20 hover:bg-primary border":
             variant === "secondary" && !disabled,
-          "cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400":
+          "border-primary/20 bg-primary/20 text-secondary cursor-not-allowed border":
             variant === "secondary" && disabled,
         },
         className,

@@ -1,11 +1,10 @@
-"use client";
 import React from "react";
 
+import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
 import classNames from "classnames";
 
 const Navbar = () => {
@@ -39,10 +38,10 @@ const Navbar = () => {
             key={menu.name}
             href={menu.link}
             className={classNames(
-              "hover:bg-primary-active mt-2 rounded-md px-3 py-1.5 hover:text-white",
+              "mt-2 rounded-md px-3 py-1.5 hover:bg-primary-active hover:text-white",
               pathname === menu.link
                 ? "bg-primary-active text-white"
-                : "text-secondary bg-transparent",
+                : "bg-transparent text-secondary",
             )}
           >
             {menu.name}

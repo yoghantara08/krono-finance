@@ -2,7 +2,7 @@ import React from "react";
 
 import classNames from "classnames";
 
-interface ButtonProps {
+export interface ButtonProps {
   id?: string;
   children: React.ReactNode;
   className?: string;
@@ -36,13 +36,13 @@ const Button = ({
           // Primary variant
           "bg-primary hover:bg-primary-hover":
             variant === "primary" && !disabled,
-          "bg-primary/80 text-secondary cursor-not-allowed":
+          "cursor-not-allowed bg-primary/80 text-secondary":
             variant === "primary" && disabled,
 
           // Secondary variant
-          "border-primary/60 bg-primary/20 hover:bg-primary border":
+          "border border-primary/60 bg-primary/20 hover:bg-primary":
             variant === "secondary" && !disabled,
-          "border-primary/20 bg-primary/20 text-secondary cursor-not-allowed border":
+          "cursor-not-allowed border border-primary/20 bg-primary/20 text-secondary":
             variant === "secondary" && disabled,
         },
         className,

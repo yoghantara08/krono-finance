@@ -115,7 +115,7 @@ const Drawer = ({
           >
             <div
               className={classNames(
-                "fixed bg-white",
+                "fixed bg-surface",
                 positionClasses[position],
                 sizeClasses[position][size],
                 containerClassName,

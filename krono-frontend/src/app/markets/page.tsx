@@ -1,7 +1,13 @@
 import React from "react";
 
-const page = () => {
-  return <div>page</div>;
+import MarketOverview from "./components/MarketOverview/MarketOverview";
+
+const MarketsPage = () => {
+  return (
+    <div>
+      <MarketOverview />
+    </div>
+  );
 };
 
-export default page;
+export default MarketsPage;

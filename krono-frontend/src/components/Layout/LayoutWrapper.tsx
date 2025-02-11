@@ -28,7 +28,7 @@ const LayoutWrapper = ({ children, className }: LayoutWrapperProps) => {
         )}
       >
         {isMobile ? <MobileNavbar /> : <Navbar />}
-        <div className="mb-10 mt-6 flex w-full justify-center lg:mb-28 lg:mt-10">
+        <div className="mb-10 mt-6 flex w-full justify-center sm:mt-8 md:mt-12 lg:mb-28">
           <main className={classNames("mx-3 w-full max-w-[1200px]", className)}>
             {children}
           </main>

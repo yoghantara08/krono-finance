@@ -3,6 +3,8 @@ import { persistReducer } from "redux-persist";
 import { persistStore } from "redux-persist";
 import autoMergeLevel1 from "redux-persist/lib/stateReconciler/autoMergeLevel1";
 
+import lendBorrowReducer from "./reducers/lendBorrowSlice";
+import modalReducer from "./reducers/modalSlice";
 import walletReducer from "./reducers/walletSlice";
 import storage from "./storage";
 
@@ -10,10 +12,13 @@ const persistConfig = {
   key: "krono_finance",
   storage,
   stateReconciler: autoMergeLevel1,
+  blacklist: ["modal"],
 };
 
 const rootReducer = combineReducers({
   wallet: walletReducer,
+  lendBorrow: lendBorrowReducer,
+  modal: modalReducer,
 });
 
 type RootReducerType = ReturnType<typeof rootReducer>;

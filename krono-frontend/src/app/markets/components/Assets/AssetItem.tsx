@@ -3,30 +3,22 @@ import React from "react";
 import Image from "next/image";
 
 import Button from "@/components/Button/Button";
-import { IToken } from "@/types";
+import { IAssetItem } from "@/types";
+
+import useLendBorrow from "../../hooks/useLendBorrow";
 
 import { ASSET_COLUMNS } from "./AssetHeader";
 
 export interface AssetItemProps {
-  token: IToken;
-  totalSupplied?: number;
-  supplyApy?: number;
-  totalBorrowed?: number;
-  borrowApy?: number;
-  action: {
-    supply?: () => void;
-    borrow?: () => void;
-  };
+  asset: IAssetItem;
 }
 
-const AssetItem = ({
-  token,
-  totalSupplied,
-  supplyApy,
-  totalBorrowed,
-  borrowApy,
-  action,
-}: AssetItemProps) => {
+const AssetItem = ({ asset }: AssetItemProps) => {
+  const { token, action, borrowApy, supplyApy, totalBorrowed, totalSupplied } =
+    asset;
+
+  const { updateLendAssetItem } = useLendBorrow();
+
   const formatCurrency = (value?: number) =>
     value ? `$${value.toLocaleString()}` : "-";
 
@@ -87,9 +79,23 @@ const AssetItem = ({
         className="flex items-center justify-end gap-3"
         style={{ width: ASSET_COLUMNS.ACTIONS.width }}
       >
-        {action.supply && <Button className="h-9 text-sm">Supply</Button>}
-        {action.borrow && (
-          <Button className="h-9 text-sm" variant="secondary">
+        {action?.supply && (
+          <Button
+            className="h-9 text-sm"
+            onClick={() => {
+              if (action.supply) action.supply();
+              updateLendAssetItem(asset);
+            }}
+          >
+            Supply
+          </Button>
+        )}
+        {action?.borrow && (
+          <Button
+            className="h-9 text-sm"
+            variant="secondary"
+            onClick={action.borrow}
+          >
             Borrow
           </Button>
         )}

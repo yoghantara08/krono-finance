@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const Footer = () => {
   return (
-    <footer className="flex w-full justify-center">
+    <footer className="flex w-full justify-center bg-background">
       <div className="flex w-full flex-col items-center gap-2 border-t px-4 py-3 md:mb-2 md:flex-row md:items-center md:justify-between">
         <span className="order-2 text-sm text-secondary md:order-1">
           © 2025 Krono Finance. All rights reserved.

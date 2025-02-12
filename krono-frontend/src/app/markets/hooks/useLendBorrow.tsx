@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 
-import { ASSET_LIST } from "@/constant";
+import { ASSET_LIST, AssetList } from "@/constant";
 import {
   setBorrowAssetItem,
   setLendAssetItem,
@@ -32,8 +32,8 @@ const useLendBorrow = () => {
   const openBorrowModal = () => dispatch(setBorrowModal(true));
   const closeBorrowModal = () => dispatch(setBorrowModal(false));
 
-  const AVAILABLE_ASSETS: IAssetItem[] = [
-    {
+  const AVAILABLE_ASSETS: Record<AssetList, IAssetItem> = {
+    USDC: {
       token: ASSET_LIST.USDC,
       totalSupplied: 15000,
       supplyApy: 5,
@@ -43,10 +43,12 @@ const useLendBorrow = () => {
         supply: () => {
           openSupplyModal();
         },
-        borrow: () => {},
+        borrow: () => {
+          openBorrowModal();
+        },
       },
     },
-    {
+    USDT: {
       token: ASSET_LIST.USDT,
       totalSupplied: 14500,
       supplyApy: 5,
@@ -56,10 +58,12 @@ const useLendBorrow = () => {
         supply: () => {
           openSupplyModal();
         },
-        borrow: () => {},
+        borrow: () => {
+          openBorrowModal();
+        },
       },
     },
-    {
+    WBTC: {
       token: ASSET_LIST.WBTC,
       totalSupplied: 5,
       supplyApy: 0,
@@ -71,7 +75,7 @@ const useLendBorrow = () => {
         },
       },
     },
-    {
+    WETH: {
       token: ASSET_LIST.WETH,
       totalSupplied: 5,
       supplyApy: 0,
@@ -83,7 +87,7 @@ const useLendBorrow = () => {
         },
       },
     },
-  ];
+  };
 
   return {
     AVAILABLE_ASSETS,

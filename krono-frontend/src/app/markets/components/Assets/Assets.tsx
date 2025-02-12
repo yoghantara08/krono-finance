@@ -2,6 +2,7 @@
 import React from "react";
 
 import useLendBorrow from "../../hooks/useLendBorrow";
+import BorrowModal from "../ActionModal/BorrowModal";
 import SupplyModal from "../ActionModal/SupplyModal";
 
 import AssetHeader from "./AssetHeader";
@@ -13,11 +14,12 @@ const Assets = () => {
   return (
     <section className="space-y-3">
       <AssetHeader />
-      {AVAILABLE_ASSETS.map((asset) => (
+      {Object.values(AVAILABLE_ASSETS).map((asset) => (
         <AssetItem key={asset.token.name} asset={asset} />
       ))}
 
       <SupplyModal />
+      <BorrowModal />
     </section>
   );
 };

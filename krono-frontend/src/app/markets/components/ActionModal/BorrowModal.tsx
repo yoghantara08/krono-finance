@@ -10,17 +10,17 @@ import { quickAddPercentage } from "@/types";
 
 import useLendBorrow from "../../hooks/useLendBorrow";
 
-const SupplyModal = () => {
-  const { lendAssetItem, supplyModal, closeSupplyModal } = useLendBorrow();
+const BorrowModal = () => {
+  const { borrowAssetItem, borrowModal, closeBorrowModal } = useLendBorrow();
 
   const { displayValue, handleInputBlur, handleInputChange } = useNumberInput();
 
   return (
     <Modal
-      title={`Supply ${lendAssetItem.token.symbol}`}
-      isOpen={supplyModal}
+      title={`Borrow ${borrowAssetItem.token.symbol}`}
+      isOpen={borrowModal}
       onClose={() => {
-        closeSupplyModal();
+        closeBorrowModal();
         handleInputChange("");
       }}
       className="max-w-[600px]"
@@ -35,13 +35,13 @@ const SupplyModal = () => {
             suffix={
               <div className="flex items-center gap-1">
                 <Image
-                  src={lendAssetItem.token.image}
-                  alt={lendAssetItem.token.symbol}
+                  src={borrowAssetItem.token.image}
+                  alt={borrowAssetItem.token.symbol}
                   width={24}
                   height={24}
                 />
                 <span className="font-medium text-white">
-                  {lendAssetItem.token.symbol}
+                  {borrowAssetItem.token.symbol}
                 </span>
               </div>
             }
@@ -50,7 +50,7 @@ const SupplyModal = () => {
 
           {/* BALANCE */}
           <div className="flex items-center justify-between gap-3 text-sm">
-            <p>Balance: 100 {lendAssetItem.token.symbol}</p>
+            <p>Borrow limit: $100 / $200</p>
             <div className="flex items-center gap-1.5">
               {quickAddPercentage.map((percentage) => (
                 <button
@@ -65,11 +65,11 @@ const SupplyModal = () => {
         </div>
 
         <Button className="mb-1 mt-4 w-full lg:!text-lg">
-          Supply {lendAssetItem.token.symbol}
+          Borrow {borrowAssetItem.token.symbol}
         </Button>
       </div>
     </Modal>
   );
 };
 
-export default SupplyModal;
+export default BorrowModal;

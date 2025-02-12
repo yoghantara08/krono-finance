@@ -17,7 +17,7 @@ const AssetItem = ({ asset }: AssetItemProps) => {
   const { token, action, borrowApy, supplyApy, totalBorrowed, totalSupplied } =
     asset;
 
-  const { updateLendAssetItem } = useLendBorrow();
+  const { updateLendAssetItem, updateBorrowAssetItem } = useLendBorrow();
 
   const formatCurrency = (value?: number) =>
     value ? `$${value.toLocaleString()}` : "-";
@@ -94,7 +94,10 @@ const AssetItem = ({ asset }: AssetItemProps) => {
           <Button
             className="h-9 text-sm"
             variant="secondary"
-            onClick={action.borrow}
+            onClick={() => {
+              if (action.borrow) action.borrow();
+              updateBorrowAssetItem(asset);
+            }}
           >
             Borrow
           </Button>

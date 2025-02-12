@@ -15,7 +15,7 @@ const AssetHeader = () => {
   return (
     <section className="space-y-3">
       <h3 className="text-lg font-medium">Available Assets</h3>
-      <div className="flex rounded-lg bg-surface px-5 py-3">
+      <div className="flex rounded-lg border bg-surface px-5 py-3">
         {Object.values(ASSET_COLUMNS).map(({ title, width }) => (
           <p
             key={title}

@@ -23,7 +23,7 @@ const AssetItem = ({ asset }: AssetItemProps) => {
     value ? `$${value.toLocaleString()}` : "-";
 
   return (
-    <div className="flex w-full items-center rounded-lg bg-surface px-5 py-3">
+    <div className="flex w-full items-center rounded-lg border bg-surface px-5 py-3">
       {/* ASSET/TOKEN */}
       <div
         className="flex items-center gap-2"

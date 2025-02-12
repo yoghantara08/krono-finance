@@ -34,7 +34,7 @@ export default {
         secondary: "#B8B9BD",
         muted: "#5E5E5E",
 
-        border: "#2C2C2C",
+        border: "#2C2C2C90",
         "border-hover": "#404040",
 
         input: "#1A1A1A",

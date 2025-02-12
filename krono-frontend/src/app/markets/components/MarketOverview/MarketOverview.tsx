@@ -18,12 +18,12 @@ const MarketOverview = () => {
 
   return (
     <section className="space-y-3">
-      <h2 className="w-fit text-3xl font-semibold">Earn & Borrow</h2>
+      <h2 className="w-fit text-3xl font-semibold">Markets</h2>
       <div className="flex items-center gap-4">
         {overviewData.map((data) => (
           <div
             key={data.title}
-            className="rounded-md border bg-surface px-3 py-2"
+            className="space-y-1 rounded-md border bg-surface px-4 py-2"
           >
             <p className="text-sm text-secondary">{data.title}</p>
             <p className="text-2xl font-medium">

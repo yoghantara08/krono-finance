@@ -1,11 +1,13 @@
 import React from "react";
 
+import Assets from "./components/Assets/Assets";
 import MarketOverview from "./components/MarketOverview/MarketOverview";
 
 const MarketsPage = () => {
   return (
-    <div>
+    <div className="space-y-8">
       <MarketOverview />
+      <Assets />
     </div>
   );
 };

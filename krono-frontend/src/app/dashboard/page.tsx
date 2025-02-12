@@ -1,21 +1,16 @@
 import React from "react";
 
-import Button from "@/components/Button/Button";
+import DashboardOverview from "./components/DashboardOverview/DashboardOverview";
+import YourBorrows from "./components/Portofolio/YourBorrows/YourBorrows";
+import YourSupplies from "./components/Portofolio/YourSupplies/YourSupplies";
 
 const page = () => {
   return (
-    <div className="flex gap-4">
-      <div className="grid w-fit gap-4">
-        <Button variant="primary">Connect Wallet</Button>
-        <Button variant="secondary">Connect Wallet</Button>
-      </div>
-      <div className="grid w-fit gap-4">
-        <Button variant="primary" disabled>
-          Connect Wallet
-        </Button>
-        <Button variant="secondary" disabled>
-          Connect Wallet
-        </Button>
+    <div className="space-y-8">
+      <DashboardOverview />
+      <div className="flex gap-4">
+        <YourSupplies />
+        <YourBorrows />
       </div>
     </div>
   );

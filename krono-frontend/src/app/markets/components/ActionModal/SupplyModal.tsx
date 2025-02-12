@@ -1,9 +1,11 @@
 import React from "react";
 
-import { RotateCcwIcon } from "lucide-react";
+import Image from "next/image";
 
 import Button from "@/components/Button/Button";
+import NumberInput from "@/components/Input/NumberInput";
 import Modal from "@/components/Modal/Modal";
+import useNumberInput from "@/hooks/useNumberInput";
 import { quickAddPercentage } from "@/types";
 
 import useLendBorrow from "../../hooks/useLendBorrow";
@@ -11,33 +13,41 @@ import useLendBorrow from "../../hooks/useLendBorrow";
 const SupplyModal = () => {
   const { lendAssetItem, supplyModal, closeSupplyModal } = useLendBorrow();
 
+  const { value, displayValue, handleInputBlur, handleInputChange } =
+    useNumberInput();
+
   return (
     <Modal
       title={`Supply ${lendAssetItem.token.symbol}`}
       isOpen={supplyModal}
-      onClose={closeSupplyModal}
+      onClose={() => {
+        closeSupplyModal();
+        handleInputChange("");
+      }}
       className="max-w-[600px]"
     >
       <div className="py-4">
         <div className="space-y-2.5">
-          {/* INPUT */}
-          <div className="space-y-2 text-secondary">
-            <div className="flex items-center justify-between">
-              <p>Amount</p>
-              <RotateCcwIcon className="size-4 cursor-pointer hover:text-white" />
-            </div>
-            <div className="flex w-full items-center justify-between gap-3 rounded-md border border-input-border bg-input px-4 py-3">
-              <input
-                type="text"
-                // value={0}
-                onChange={() => {}}
-                onBlur={() => {}}
-                placeholder="0"
-                className="h-full w-full bg-transparent leading-none text-white focus:outline-none"
-              />
-              <div className="">USDC</div>
-            </div>
-          </div>
+          <NumberInput
+            label="Enter amount"
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+            value={displayValue}
+            suffix={
+              <div className="flex items-center gap-1">
+                <Image
+                  src={lendAssetItem.token.image}
+                  alt={lendAssetItem.token.symbol}
+                  width={24}
+                  height={24}
+                />
+                <span className="font-medium text-white">
+                  {lendAssetItem.token.symbol}
+                </span>
+              </div>
+            }
+            placeholder="0"
+          />
 
           {/* BALANCE */}
           <div className="flex items-center justify-between gap-3 text-sm">
@@ -55,7 +65,7 @@ const SupplyModal = () => {
           </div>
         </div>
 
-        <Button className="mt-4 w-full lg:!text-lg">
+        <Button className="mb-1 mt-4 w-full lg:!text-lg">
           Supply {lendAssetItem.token.symbol}
         </Button>
       </div>

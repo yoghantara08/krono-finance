@@ -42,7 +42,7 @@ const Modal: React.FC<ModalProps> = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className={classNames("fixed inset-0 backdrop-blur-[2px]")} />
+          <div className={classNames("fixed inset-0 backdrop-blur-[4px]")} />
         </TransitionChild>
 
         <div className="fixed inset-0 overflow-y-auto">

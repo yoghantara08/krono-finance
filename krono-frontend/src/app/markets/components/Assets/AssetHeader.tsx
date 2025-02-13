@@ -13,22 +13,19 @@ export const ASSET_COLUMNS = {
 
 const AssetHeader = () => {
   return (
-    <section className="space-y-3">
-      <h3 className="text-lg font-medium">Available Assets</h3>
-      <div className="flex rounded-lg border bg-surface px-5 py-3">
-        {Object.values(ASSET_COLUMNS).map(({ title, width }) => (
-          <p
-            key={title}
-            className={classNames(
-              "text-center text-sm text-secondary first:text-start",
-            )}
-            style={{ width }}
-          >
-            {title}
-          </p>
-        ))}
-      </div>
-    </section>
+    <div className="flex rounded-lg border bg-surface px-5 py-3">
+      {Object.values(ASSET_COLUMNS).map(({ title, width }) => (
+        <p
+          key={title}
+          className={classNames(
+            "text-center text-sm text-secondary first:text-start",
+          )}
+          style={{ width }}
+        >
+          {title}
+        </p>
+      ))}
+    </div>
   );
 };
 

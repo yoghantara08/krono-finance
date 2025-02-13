@@ -18,15 +18,15 @@ const MarketOverview = () => {
 
   return (
     <section className="space-y-3">
-      <h2 className="w-fit text-3xl font-semibold">Markets</h2>
-      <div className="flex items-center gap-4">
+      <h2 className="w-fit text-2xl font-semibold md:text-3xl">Markets</h2>
+      <div className="flex flex-wrap items-center gap-2 md:flex-row md:gap-4">
         {overviewData.map((data) => (
           <div
             key={data.title}
-            className="space-y-1 rounded-md border bg-surface px-4 py-2"
+            className="space-y-1 rounded-md border bg-surface px-3 py-2 md:px-4"
           >
-            <p className="text-sm text-secondary">{data.title}</p>
-            <p className="text-2xl font-medium">
+            <p className="text-xs text-secondary md:text-sm">{data.title}</p>
+            <p className="font-medium md:text-2xl">
               <span className="text-secondary">$</span>
               {data.value}M
             </p>

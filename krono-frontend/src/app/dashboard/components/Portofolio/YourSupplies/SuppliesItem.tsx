@@ -7,7 +7,13 @@ import { IYourSuppliesItem } from "@/types";
 
 import { YOUR_SUPPLIES_COLUMNS } from "./YourSupplies";
 
-const SuppliesItem = ({ token, balance, apy, withdraw }: IYourSuppliesItem) => {
+interface SuppliesItemProps {
+  asset: IYourSuppliesItem;
+}
+
+const SuppliesItem = ({ asset }: SuppliesItemProps) => {
+  const { token, balance, apy, withdraw } = asset;
+
   const formatCurrency = (value?: number) =>
     value ? `$${value.toLocaleString()}` : "-";
 

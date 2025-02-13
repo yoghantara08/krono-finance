@@ -3,8 +3,11 @@ import React from "react";
 
 import classNames from "classnames";
 
+import useDashboard from "@/app/dashboard/hooks/useDashboard";
 import { ASSET_LIST } from "@/constant";
 import useWindowSize from "@/hooks/useWindowSize";
+
+import RepayModal from "../../ActionModal/RepayModal";
 
 import BorrowsCard from "./BorrowsCard";
 import BorrowsItem from "./BorrowsItem";
@@ -18,6 +21,7 @@ export const YOUR_BORROWS_COLUMNS = {
 
 const YourBorrows = () => {
   const { isMobile } = useWindowSize();
+  const { openRepayModal } = useDashboard();
 
   return (
     <div className="h-fit w-full rounded-md border bg-surface">
@@ -50,19 +54,29 @@ const YourBorrows = () => {
 
       {isMobile ? (
         <BorrowsCard
-          token={ASSET_LIST.USDC}
-          debt={100}
-          repay={() => {}}
-          apy={3}
+          asset={{
+            token: ASSET_LIST.USDC,
+            debt: 100,
+            repay: () => {
+              openRepayModal();
+            },
+            apy: 3,
+          }}
         />
       ) : (
         <BorrowsItem
-          token={ASSET_LIST.USDC}
-          debt={100}
-          repay={() => {}}
-          apy={3}
+          asset={{
+            token: ASSET_LIST.USDC,
+            debt: 100,
+            repay: () => {
+              openRepayModal();
+            },
+            apy: 3,
+          }}
         />
       )}
+
+      <RepayModal />
     </div>
   );
 };

@@ -5,7 +5,13 @@ import Image from "next/image";
 import Button from "@/components/Button/Button";
 import { IYourBorrowsItem } from "@/types";
 
-const BorrowsCard = ({ token, debt, apy, repay }: IYourBorrowsItem) => {
+interface BorrowsItemProps {
+  asset: IYourBorrowsItem;
+}
+
+const BorrowsCard = ({ asset }: BorrowsItemProps) => {
+  const { token, debt, apy, repay } = asset;
+
   return (
     <div className="mt-2 space-y-3 border-t px-3 py-4">
       <div className="flex gap-1.5">

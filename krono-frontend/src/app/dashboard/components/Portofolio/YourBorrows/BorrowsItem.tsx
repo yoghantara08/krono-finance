@@ -7,7 +7,13 @@ import { IYourBorrowsItem } from "@/types";
 
 import { YOUR_BORROWS_COLUMNS } from "./YourBorrows";
 
-const BorrowsItem = ({ token, debt, apy, repay }: IYourBorrowsItem) => {
+interface BorrowsItemProps {
+  asset: IYourBorrowsItem;
+}
+
+const BorrowsItem = ({ asset }: BorrowsItemProps) => {
+  const { token, debt, apy, repay } = asset;
+
   const formatCurrency = (value?: number) =>
     value ? `$${value.toLocaleString()}` : "-";
 

@@ -3,8 +3,11 @@ import React from "react";
 
 import classNames from "classnames";
 
+import useDashboard from "@/app/dashboard/hooks/useDashboard";
 import { ASSET_LIST } from "@/constant";
 import useWindowSize from "@/hooks/useWindowSize";
+
+import WithdrawModal from "../../ActionModal/WithdrawModal";
 
 import SuppliesCard from "./SuppliesCard";
 import SuppliesItem from "./SuppliesItem";
@@ -18,6 +21,7 @@ export const YOUR_SUPPLIES_COLUMNS = {
 
 const YourSupplies = () => {
   const { isMobile } = useWindowSize();
+  const { openWithdrawModal } = useDashboard();
 
   return (
     <div className="h-fit w-full rounded-md border bg-surface">
@@ -54,34 +58,52 @@ const YourSupplies = () => {
       {isMobile ? (
         <>
           <SuppliesCard
-            token={ASSET_LIST.USDC}
-            balance={200}
-            withdraw={() => {}}
-            apy={5.4}
+            asset={{
+              token: ASSET_LIST.USDC,
+              balance: 200,
+              withdraw: () => {
+                openWithdrawModal();
+              },
+              apy: 5.4,
+            }}
           />
           <SuppliesCard
-            token={ASSET_LIST.USDT}
-            balance={100}
-            withdraw={() => {}}
-            apy={4.7}
+            asset={{
+              token: ASSET_LIST.USDT,
+              balance: 200,
+              withdraw: () => {
+                openWithdrawModal();
+              },
+              apy: 5.4,
+            }}
           />
         </>
       ) : (
         <>
           <SuppliesItem
-            token={ASSET_LIST.USDC}
-            balance={200}
-            withdraw={() => {}}
-            apy={5.4}
+            asset={{
+              token: ASSET_LIST.USDC,
+              balance: 200,
+              withdraw: () => {
+                openWithdrawModal();
+              },
+              apy: 5.4,
+            }}
           />
           <SuppliesItem
-            token={ASSET_LIST.USDT}
-            balance={100}
-            withdraw={() => {}}
-            apy={4.7}
+            asset={{
+              token: ASSET_LIST.USDT,
+              balance: 200,
+              withdraw: () => {
+                openWithdrawModal();
+              },
+              apy: 5.4,
+            }}
           />
         </>
       )}
+
+      <WithdrawModal />
     </div>
   );
 };

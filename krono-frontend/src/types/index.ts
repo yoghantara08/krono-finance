@@ -19,16 +19,16 @@ export interface IAssetItem {
 
 export interface IYourSuppliesItem {
   token: IToken;
-  balance: number;
+  balance?: number;
   apy?: number;
-  withdraw: () => void;
+  withdraw?: () => void;
 }
 
 export interface IYourBorrowsItem {
   token: IToken;
-  debt: number;
+  debt?: number;
   apy?: number;
-  repay: () => void;
+  repay?: () => void;
 }
 
 export type quickAddPercentageType = 25 | 50 | 75 | 100;

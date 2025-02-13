@@ -6,9 +6,9 @@ import YourSupplies from "./components/Portofolio/YourSupplies/YourSupplies";
 
 const page = () => {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       <DashboardOverview />
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-4 xl:flex-row">
         <YourSupplies />
         <YourBorrows />
       </div>

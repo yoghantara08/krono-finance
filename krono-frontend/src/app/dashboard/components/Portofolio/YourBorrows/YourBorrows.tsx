@@ -4,7 +4,9 @@ import React from "react";
 import classNames from "classnames";
 
 import { ASSET_LIST } from "@/constant";
+import useWindowSize from "@/hooks/useWindowSize";
 
+import BorrowsCard from "./BorrowsCard";
 import BorrowsItem from "./BorrowsItem";
 
 export const YOUR_BORROWS_COLUMNS = {
@@ -15,10 +17,12 @@ export const YOUR_BORROWS_COLUMNS = {
 } as const;
 
 const YourBorrows = () => {
+  const { isMobile } = useWindowSize();
+
   return (
     <div className="h-fit w-full rounded-md border bg-surface">
-      <div className="space-y-4 px-4 py-3">
-        <h3 className="text-lg">Your borrows</h3>
+      <div className="space-y-3 p-3 md:space-y-4 md:px-4">
+        <h3 className="text-lg font-medium">Your Borrows</h3>
 
         <div className="flex items-center gap-3 text-sm text-secondary">
           <div className="rounded-md border px-2 py-1">
@@ -30,7 +34,7 @@ const YourBorrows = () => {
         </div>
       </div>
 
-      <div className="flex w-full items-center border-b px-5 py-3">
+      <div className="hidden w-full border-b px-5 py-3 md:flex md:items-center">
         {Object.values(YOUR_BORROWS_COLUMNS).map(({ title, width }) => (
           <p
             key={title}
@@ -44,12 +48,21 @@ const YourBorrows = () => {
         ))}
       </div>
 
-      <BorrowsItem
-        token={ASSET_LIST.USDC}
-        debt={100}
-        repay={() => {}}
-        apy={3}
-      />
+      {isMobile ? (
+        <BorrowsCard
+          token={ASSET_LIST.USDC}
+          debt={100}
+          repay={() => {}}
+          apy={3}
+        />
+      ) : (
+        <BorrowsItem
+          token={ASSET_LIST.USDC}
+          debt={100}
+          repay={() => {}}
+          apy={3}
+        />
+      )}
     </div>
   );
 };

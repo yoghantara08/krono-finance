@@ -10,6 +10,7 @@ import { YOUR_SUPPLIES_COLUMNS } from "./YourSupplies";
 const SuppliesItem = ({ token, balance, apy, withdraw }: IYourSuppliesItem) => {
   const formatCurrency = (value?: number) =>
     value ? `$${value.toLocaleString()}` : "-";
+
   return (
     <div className="flex w-full items-center p-4">
       {/* ASSET/TOKEN */}

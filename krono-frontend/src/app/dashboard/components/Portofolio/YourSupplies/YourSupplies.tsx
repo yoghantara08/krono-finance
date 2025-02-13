@@ -4,7 +4,9 @@ import React from "react";
 import classNames from "classnames";
 
 import { ASSET_LIST } from "@/constant";
+import useWindowSize from "@/hooks/useWindowSize";
 
+import SuppliesCard from "./SuppliesCard";
 import SuppliesItem from "./SuppliesItem";
 
 export const YOUR_SUPPLIES_COLUMNS = {
@@ -15,10 +17,12 @@ export const YOUR_SUPPLIES_COLUMNS = {
 } as const;
 
 const YourSupplies = () => {
+  const { isMobile } = useWindowSize();
+
   return (
     <div className="h-fit w-full rounded-md border bg-surface">
-      <div className="space-y-4 px-4 py-3">
-        <h3 className="text-lg">Your supplies</h3>
+      <div className="space-y-3 p-3 md:space-y-4 md:px-4">
+        <h3 className="text-lg font-medium">Your Supplies</h3>
 
         <div className="flex items-center gap-3 text-sm text-secondary">
           <div className="rounded-md border px-2 py-1">
@@ -33,7 +37,7 @@ const YourSupplies = () => {
         </div>
       </div>
 
-      <div className="flex w-full items-center border-b px-5 py-3">
+      <div className="hidden w-full border-b px-5 py-3 md:flex md:items-center">
         {Object.values(YOUR_SUPPLIES_COLUMNS).map(({ title, width }) => (
           <p
             key={title}
@@ -47,18 +51,37 @@ const YourSupplies = () => {
         ))}
       </div>
 
-      <SuppliesItem
-        token={ASSET_LIST.USDC}
-        balance={200}
-        withdraw={() => {}}
-        apy={5.4}
-      />
-      <SuppliesItem
-        token={ASSET_LIST.USDT}
-        balance={100}
-        withdraw={() => {}}
-        apy={4.7}
-      />
+      {isMobile ? (
+        <>
+          <SuppliesCard
+            token={ASSET_LIST.USDC}
+            balance={200}
+            withdraw={() => {}}
+            apy={5.4}
+          />
+          <SuppliesCard
+            token={ASSET_LIST.USDT}
+            balance={100}
+            withdraw={() => {}}
+            apy={4.7}
+          />
+        </>
+      ) : (
+        <>
+          <SuppliesItem
+            token={ASSET_LIST.USDC}
+            balance={200}
+            withdraw={() => {}}
+            apy={5.4}
+          />
+          <SuppliesItem
+            token={ASSET_LIST.USDT}
+            balance={100}
+            withdraw={() => {}}
+            apy={4.7}
+          />
+        </>
+      )}
     </div>
   );
 };

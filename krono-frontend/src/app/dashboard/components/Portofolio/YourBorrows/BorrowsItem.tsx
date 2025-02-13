@@ -10,6 +10,7 @@ import { YOUR_BORROWS_COLUMNS } from "./YourBorrows";
 const BorrowsItem = ({ token, debt, apy, repay }: IYourBorrowsItem) => {
   const formatCurrency = (value?: number) =>
     value ? `$${value.toLocaleString()}` : "-";
+
   return (
     <div className="flex w-full items-center p-4">
       {/* ASSET/TOKEN */}

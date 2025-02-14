@@ -13,8 +13,6 @@ contract LendingPool is Ownable, ReentrancyGuard {
     error InsufficientShares();
     error InsufficientCollateral();
     error InsufficientLiquidity();
-    error UnhealthyPosition();
-    error HealthyPosition();
 
     struct UserAccount {
         mapping(address => uint256) supplyShares;
@@ -165,7 +163,6 @@ contract LendingPool is Ownable, ReentrancyGuard {
         state.totalBorrowShares += shares;
         userAccounts[msg.sender].borrowShares[token] += shares;
 
-        if (!_isHealthy(msg.sender)) revert UnhealthyPosition();
         if (IERC20(token).balanceOf(address(this)) < amount)
             revert InsufficientLiquidity();
 
@@ -220,7 +217,6 @@ contract LendingPool is Ownable, ReentrancyGuard {
         UserAccount storage account = userAccounts[msg.sender];
         if (token != wbtc && token != manta) revert InvalidToken();
         if (amount > account.collateral[token]) revert InsufficientCollateral();
-        if (!_isHealthy(msg.sender)) revert UnhealthyPosition();
 
         account.collateral[token] -= amount;
         tokenStates[token].totalSupplyAssets -= amount;
@@ -252,38 +248,6 @@ contract LendingPool is Ownable, ReentrancyGuard {
         } else {
             state.lastAccrued = block.timestamp;
         }
-    }
-
-    function _isHealthy(address user) internal view returns (bool) {
-        UserAccount storage account = userAccounts[user];
-        TokenState storage usdcState = tokenStates[usdc];
-        TokenState storage usdtState = tokenStates[usdt];
-
-        uint256 totalBorrowValue = 0;
-
-        // Calculate USDC borrow value
-        if (usdcState.totalBorrowShares > 0) {
-            totalBorrowValue +=
-                (account.borrowShares[usdc] * usdcState.totalBorrowAssets) /
-                usdcState.totalBorrowShares;
-        }
-
-        // Calculate USDT borrow value
-        if (usdtState.totalBorrowShares > 0) {
-            totalBorrowValue +=
-                (account.borrowShares[usdt] * usdtState.totalBorrowAssets) /
-                usdtState.totalBorrowShares;
-        }
-
-        if (totalBorrowValue == 0) return true;
-
-        uint256 collateralValue = (account.collateral[wbtc] *
-            priceOracle.getTokenPrice(wbtc)) +
-            (account.collateral[manta] * priceOracle.getTokenPrice(manta));
-
-        return
-            totalBorrowValue <=
-            (collateralValue * config.liquidationThreshold()) / 100;
     }
 
     function _getSupplyApy(address token) internal view returns (uint256) {

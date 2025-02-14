@@ -8,6 +8,7 @@ import useDashboard from "@/app/dashboard/hooks/useDashboard";
 import useSupply from "@/app/dashboard/hooks/useSupply";
 import { ASSET_LIST } from "@/constant";
 import useWindowSize from "@/hooks/useWindowSize";
+import { formatCurrency } from "@/lib/utils";
 
 import WithdrawModal from "../../ActionModal/WithdrawModal";
 
@@ -23,10 +24,15 @@ export const YOUR_SUPPLIES_COLUMNS = {
 
 const YourSupplies = () => {
   const { isMobile } = useWindowSize();
-  const { openWithdrawModal } = useDashboard();
+  const { openWithdrawModal, updateWithdrawAssetItem } = useDashboard();
   const { address } = useAccount();
 
   const { balances } = useSupply(address);
+
+  const totalBalance = Object.values(balances).reduce(
+    (acc, balance) => acc + Number(balance),
+    0,
+  );
 
   return (
     <div className="h-fit w-full rounded-md border bg-surface">
@@ -35,14 +41,18 @@ const YourSupplies = () => {
 
         <div className="flex items-center gap-3 text-sm text-secondary">
           <div className="rounded-md border px-2 py-1">
-            Balance $<span className="font-medium text-white">250.20</span>
+            Balance $
+            <span className="font-medium text-white">
+              {formatCurrency(BigInt(totalBalance / 10 ** 18))}
+            </span>
           </div>
           <div className="rounded-md border px-2 py-1">
-            APY <span className="font-medium text-white">5.4</span>%
+            APY <span className="font-medium text-white">6</span>%
           </div>
-          <div className="rounded-md border px-2 py-1">
-            Collateral $<span className="font-medium text-white">55.64</span>
-          </div>
+          {/* <div className="rounded-md border px-2 py-1">
+            Collateral $
+            <span className="font-medium text-white">{totalCollateral}</span>
+          </div> */}
         </div>
       </div>
 
@@ -66,20 +76,30 @@ const YourSupplies = () => {
             asset={{
               token: ASSET_LIST.USDC,
               balance: Number(balances.TEST_USDC / 10n ** 18n),
+              apy: 6,
               withdraw: () => {
                 openWithdrawModal();
+                updateWithdrawAssetItem({
+                  token: ASSET_LIST.USDC,
+                  balance: Number(balances.TEST_USDC / 10n ** 18n),
+                  apy: 6,
+                });
               },
-              apy: 6,
             }}
           />
           <SuppliesCard
             asset={{
               token: ASSET_LIST.USDT,
               balance: Number(balances.TEST_USDT / 10n ** 18n),
+              apy: 6,
               withdraw: () => {
                 openWithdrawModal();
+                updateWithdrawAssetItem({
+                  token: ASSET_LIST.USDT,
+                  balance: Number(balances.TEST_USDT / 10n ** 18n),
+                  apy: 6,
+                });
               },
-              apy: 6,
             }}
           />
           <SuppliesCard
@@ -88,6 +108,11 @@ const YourSupplies = () => {
               balance: Number(balances.TEST_MANTA / 10n ** 18n),
               withdraw: () => {
                 openWithdrawModal();
+                updateWithdrawAssetItem({
+                  token: ASSET_LIST.MANTA,
+                  balance: Number(balances.TEST_MANTA / 10n ** 18n),
+                  apy: 6,
+                });
               },
               apy: 0,
             }}
@@ -98,6 +123,11 @@ const YourSupplies = () => {
               balance: Number(balances.TEST_WBTC / 10n ** 18n),
               withdraw: () => {
                 openWithdrawModal();
+                updateWithdrawAssetItem({
+                  token: ASSET_LIST.WBTC,
+                  balance: Number(balances.TEST_WBTC / 10n ** 18n),
+                  apy: 6,
+                });
               },
               apy: 0,
             }}
@@ -111,6 +141,11 @@ const YourSupplies = () => {
               balance: Number(balances.TEST_USDC / 10n ** 18n),
               withdraw: () => {
                 openWithdrawModal();
+                updateWithdrawAssetItem({
+                  token: ASSET_LIST.USDC,
+                  balance: Number(balances.TEST_USDC / 10n ** 18n),
+                  apy: 6,
+                });
               },
               apy: 6,
             }}
@@ -121,6 +156,11 @@ const YourSupplies = () => {
               balance: Number(balances.TEST_USDT / 10n ** 18n),
               withdraw: () => {
                 openWithdrawModal();
+                updateWithdrawAssetItem({
+                  token: ASSET_LIST.USDT,
+                  balance: Number(balances.TEST_USDT / 10n ** 18n),
+                  apy: 6,
+                });
               },
               apy: 6,
             }}
@@ -131,6 +171,11 @@ const YourSupplies = () => {
               balance: Number(balances.TEST_MANTA / 10n ** 18n),
               withdraw: () => {
                 openWithdrawModal();
+                updateWithdrawAssetItem({
+                  token: ASSET_LIST.MANTA,
+                  balance: Number(balances.TEST_MANTA / 10n ** 18n),
+                  apy: 6,
+                });
               },
               apy: 0,
             }}
@@ -141,6 +186,11 @@ const YourSupplies = () => {
               balance: Number(balances.TEST_WBTC / 10n ** 18n),
               withdraw: () => {
                 openWithdrawModal();
+                updateWithdrawAssetItem({
+                  token: ASSET_LIST.WBTC,
+                  balance: Number(balances.TEST_WBTC / 10n ** 18n),
+                  apy: 6,
+                });
               },
               apy: 0,
             }}

@@ -71,11 +71,7 @@ const useSupply = (user?: Address) => {
     fetchBalances();
   }, [user]);
 
-  const withdraw = async (
-    token: Address,
-    sharesOrAmount: bigint,
-    account: Address,
-  ) => {
+  const withdraw = async (token: Address, amount: bigint, account: Address) => {
     if (!data || !account) return;
 
     try {
@@ -88,7 +84,7 @@ const useSupply = (user?: Address) => {
         address: LENDING_POOL_ADDRESS,
         abi: LENDING_POOL_ABI,
         functionName,
-        args: [token, sharesOrAmount],
+        args: [token, amount],
       });
       return hash;
     } catch (error) {

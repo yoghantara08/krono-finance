@@ -1,6 +1,6 @@
 export function formatCurrency(amount: bigint): string {
   return Number(amount).toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   });
 }

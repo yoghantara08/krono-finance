@@ -10,6 +10,7 @@ import LayoutWrapper from "@/components/Layout/LayoutWrapper";
 import { Providers } from "./providers";
 
 import "./globals.css";
+import "@rainbow-me/rainbowkit/styles.css";
 
 const inter = Inter({
   variable: "--font-inter",

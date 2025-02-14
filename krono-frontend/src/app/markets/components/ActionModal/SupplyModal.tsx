@@ -26,7 +26,7 @@ const SupplyModal = () => {
 
   const { lendAssetItem, supplyModal, closeSupplyModal } = useLendBorrow();
 
-  const { data, isLoading, error } = useBalance({
+  const { data } = useBalance({
     address: account,
     token: lendAssetItem.token.address,
   });

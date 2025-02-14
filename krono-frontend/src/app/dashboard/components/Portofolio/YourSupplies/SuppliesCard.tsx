@@ -3,6 +3,7 @@ import React from "react";
 import Image from "next/image";
 
 import Button from "@/components/Button/Button";
+import { formatCurrency } from "@/lib/utils";
 import { IYourSuppliesItem } from "@/types";
 
 interface SuppliesItemProps {
@@ -24,9 +25,16 @@ const SuppliesCard = ({ asset }: SuppliesItemProps) => {
 
       <div className="flex items-center justify-between text-sm">
         <p>Balance</p>
-        <div>
+        <div className="text-end">
           <p>{balance ?? "-"}</p>
-          <p className="text-xs text-secondary">${balance}</p>
+          <p className="text-xs text-secondary">
+            $
+            {balance
+              ? formatCurrency(
+                  BigInt(balance) * (asset.token.price / 10n ** 18n),
+                )
+              : formatCurrency(0n)}
+          </p>
         </div>
       </div>
 

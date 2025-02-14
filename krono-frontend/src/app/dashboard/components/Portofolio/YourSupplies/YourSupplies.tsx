@@ -65,21 +65,41 @@ const YourSupplies = () => {
           <SuppliesCard
             asset={{
               token: ASSET_LIST.USDC,
-              balance: 200,
+              balance: Number(balances.TEST_USDC / 10n ** 18n),
               withdraw: () => {
                 openWithdrawModal();
               },
-              apy: 5.4,
+              apy: 6,
             }}
           />
           <SuppliesCard
             asset={{
               token: ASSET_LIST.USDT,
-              balance: 200,
+              balance: Number(balances.TEST_USDT / 10n ** 18n),
               withdraw: () => {
                 openWithdrawModal();
               },
-              apy: 5.4,
+              apy: 6,
+            }}
+          />
+          <SuppliesCard
+            asset={{
+              token: ASSET_LIST.MANTA,
+              balance: Number(balances.TEST_MANTA / 10n ** 18n),
+              withdraw: () => {
+                openWithdrawModal();
+              },
+              apy: 0,
+            }}
+          />
+          <SuppliesCard
+            asset={{
+              token: ASSET_LIST.WBTC,
+              balance: Number(balances.TEST_WBTC / 10n ** 18n),
+              withdraw: () => {
+                openWithdrawModal();
+              },
+              apy: 0,
             }}
           />
         </>

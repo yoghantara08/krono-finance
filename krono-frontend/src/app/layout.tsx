@@ -5,8 +5,6 @@ import { Inter } from "next/font/google";
 
 import { Analytics } from "@vercel/analytics/react";
 
-import LayoutWrapper from "@/components/Layout/LayoutWrapper";
-
 import { Providers } from "./providers";
 
 import "./globals.css";
@@ -30,9 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} antialiased`}>
-        <Providers>
-          <LayoutWrapper>{children}</LayoutWrapper>
-        </Providers>
+        <Providers>{children}</Providers>
         <Analytics />
       </body>
     </html>

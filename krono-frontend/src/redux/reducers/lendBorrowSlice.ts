@@ -14,24 +14,27 @@ const initialState: LendBorrowState = {
     token: {
       name: "",
       symbol: "",
-      address: "",
+      address: "0x",
       image: "",
+      price: 0n,
     },
   },
   borrowAssetItem: {
     token: {
       name: "",
       symbol: "",
-      address: "",
+      address: "0x",
       image: "",
+      price: 0n,
     },
   },
   wihtdrawAssetItem: {
     token: {
       name: "",
       symbol: "",
-      address: "",
+      address: "0x",
       image: "",
+      price: 0n,
     },
     balance: 0,
     apy: 0,
@@ -41,8 +44,9 @@ const initialState: LendBorrowState = {
     token: {
       name: "",
       symbol: "",
-      address: "",
+      address: "0x",
       image: "",
+      price: 0n,
     },
     debt: 0,
     apy: 0,

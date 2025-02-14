@@ -15,7 +15,11 @@ import NumberInput from "@/components/Input/NumberInput";
 import Modal from "@/components/Modal/Modal";
 import { LENDING_POOL_ADDRESS } from "@/constant";
 import useNumberInput from "@/hooks/useNumberInput";
-import { publicClient, supply } from "@/lib/services/lendingPoolService";
+import {
+  publicClient,
+  supply,
+  supplyCollateral,
+} from "@/lib/services/lendingPoolService";
 import { quickAddPercentage } from "@/types";
 
 import useLendBorrow from "../../hooks/useLendBorrow";
@@ -26,9 +30,12 @@ const SupplyModal = () => {
 
   const { lendAssetItem, supplyModal, closeSupplyModal } = useLendBorrow();
 
+  const tokenSymbol = lendAssetItem.token.symbol;
+  const tokenAddress = lendAssetItem.token.address;
+
   const { data } = useBalance({
     address: account,
-    token: lendAssetItem.token.address,
+    token: tokenAddress,
   });
 
   const balance = data?.value && Number(data.value) / 10 ** 18;
@@ -45,7 +52,7 @@ const SupplyModal = () => {
       // Call approve with two arguments: spender (lending pool address) and amount
       const tx = await writeContractAsync({
         abi: erc20Abi,
-        address: lendAssetItem.token.address,
+        address: tokenAddress,
         functionName: "approve",
         args: [LENDING_POOL_ADDRESS, amountInSmallestUnit],
       });
@@ -62,8 +69,32 @@ const SupplyModal = () => {
     const amount = BigInt(value * 10 ** 18);
 
     try {
-      const hash = await supply(
-        lendAssetItem.token.address,
+      const hash = await supply(tokenAddress, amount, walletClient, account);
+      console.log(hash);
+
+      // Wait for the transaction receipt (using the public client if available)
+      const receipt = await publicClient.waitForTransactionReceipt({
+        hash,
+      });
+      console.log("Transaction receipt:", receipt);
+
+      if (receipt.status === "reverted") {
+        console.error("Transaction reverted.");
+        // Optionally decode the revert reason if your provider supports it.
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleSupplyCollateral = async () => {
+    if (!walletClient || !account) return;
+    // Supply token as collateral
+    const amount = BigInt(value * 10 ** 18);
+
+    try {
+      const hash = await supplyCollateral(
+        tokenAddress,
         amount,
         walletClient,
         account,
@@ -145,7 +176,11 @@ const SupplyModal = () => {
         </Button>
         <Button
           className="mb-1 mt-4 w-full lg:!text-lg"
-          onClick={handleSupply}
+          onClick={
+            tokenSymbol === "USDC" || tokenSymbol === "USDT"
+              ? handleSupply
+              : handleSupplyCollateral
+          }
           disabled={!value}
         >
           Supply {lendAssetItem.token.symbol}

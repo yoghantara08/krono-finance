@@ -7,8 +7,14 @@ import { usePathname } from "next/navigation";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import classNames from "classnames";
 
+import Button from "../Button/Button";
+import { useAccount, useWalletClient } from "wagmi";
+import { claimAllTokens } from "@/lib/services/tokenFaucetService";
+
 const Navbar = () => {
   const pathname = usePathname();
+  const { data } = useWalletClient();
+  const { address } = useAccount();
 
   const menus = [
     {
@@ -20,6 +26,16 @@ const Navbar = () => {
       link: "/markets",
     },
   ];
+
+  const handleClaimFaucet = async () => {
+    if (!data || !address) return;
+
+    try {
+      await claimAllTokens(address, data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <nav className="sticky top-0 z-20 flex h-[70px] w-full items-center justify-between border-b bg-background px-5 shadow-sm">
@@ -48,11 +64,20 @@ const Navbar = () => {
           </Link>
         ))}
       </div>
-      <ConnectButton
-        showBalance={false}
-        accountStatus={"address"}
-        chainStatus={"icon"}
-      />
+      <div className="flex items-center gap-2">
+        <Button
+          className="h-10"
+          variant="secondary"
+          onClick={handleClaimFaucet}
+        >
+          Claim Faucet
+        </Button>
+        <ConnectButton
+          showBalance={false}
+          accountStatus={"address"}
+          chainStatus={"icon"}
+        />
+      </div>
     </nav>
   );
 };

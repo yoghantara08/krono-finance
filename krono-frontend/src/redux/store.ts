@@ -9,7 +9,7 @@ import walletReducer from "./reducers/walletSlice";
 import storage from "./storage";
 
 const persistConfig = {
-  key: "krono_finance",
+  key: "krono_finance_state",
   storage,
   stateReconciler: autoMergeLevel1,
   blacklist: ["modal", "lendBorrow"],

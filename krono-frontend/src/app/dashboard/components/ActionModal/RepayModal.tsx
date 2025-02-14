@@ -11,13 +11,13 @@ import { quickAddPercentage } from "@/types";
 import useDashboard from "../../hooks/useDashboard";
 
 const RepayModal = () => {
-  const { wihtdrawAssetItem, repayModal, closeRepayModal } = useDashboard();
+  const { repayAssetItem, repayModal, closeRepayModal } = useDashboard();
 
   const { displayValue, handleInputBlur, handleInputChange } = useNumberInput();
 
   return (
     <Modal
-      title={`Repay ${wihtdrawAssetItem.token.symbol}`}
+      title={`Repay ${repayAssetItem.token.symbol}`}
       isOpen={repayModal}
       onClose={() => {
         closeRepayModal();
@@ -35,13 +35,13 @@ const RepayModal = () => {
             suffix={
               <div className="flex items-center gap-1">
                 <Image
-                  src={wihtdrawAssetItem.token.image}
-                  alt={wihtdrawAssetItem.token.symbol}
+                  src={repayAssetItem.token.image}
+                  alt={repayAssetItem.token.symbol}
                   width={24}
                   height={24}
                 />
                 <span className="font-medium text-white">
-                  {wihtdrawAssetItem.token.symbol}
+                  {repayAssetItem.token.symbol}
                 </span>
               </div>
             }
@@ -50,7 +50,7 @@ const RepayModal = () => {
 
           {/* BALANCE */}
           <div className="flex items-center justify-between gap-3 text-sm">
-            <p>Debt: 100 {wihtdrawAssetItem.token.symbol}</p>
+            <p>Debt: 100 {repayAssetItem.token.symbol}</p>
             <div className="flex items-center gap-1.5">
               {quickAddPercentage.map((percentage) => (
                 <button
@@ -65,7 +65,7 @@ const RepayModal = () => {
         </div>
 
         <Button className="mb-1 mt-4 w-full lg:!text-lg">
-          Repay {wihtdrawAssetItem.token.symbol}
+          Repay {repayAssetItem.token.symbol}
         </Button>
       </div>
     </Modal>

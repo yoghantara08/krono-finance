@@ -15,13 +15,13 @@ import BorrowsItem from "./BorrowsItem";
 export const YOUR_BORROWS_COLUMNS = {
   ASSET: { width: "27.5%", title: "Asset" },
   DEBT: { width: "27.5%", title: "Debt" },
-  SUPPLY_APY: { width: "27.5%", title: "Supply APY" },
+  SUPPLY_APY: { width: "27.5%", title: "Borrow APY" },
   ACTIONS: { width: "17.5%", title: "" },
 } as const;
 
 const YourBorrows = () => {
   const { isMobile } = useWindowSize();
-  const { openRepayModal } = useDashboard();
+  const { openRepayModal, updateRepayAssetItem } = useDashboard();
 
   return (
     <div className="h-fit w-full rounded-md border bg-surface">
@@ -33,7 +33,7 @@ const YourBorrows = () => {
             Debt $<span className="font-medium text-white">100</span>
           </div>
           <div className="rounded-md border px-2 py-1">
-            APY <span className="font-medium text-white">3</span>%
+            APY <span className="font-medium text-white">5</span>%
           </div>
         </div>
       </div>
@@ -57,10 +57,15 @@ const YourBorrows = () => {
           asset={{
             token: ASSET_LIST.USDC,
             debt: 100,
+            apy: 5,
             repay: () => {
               openRepayModal();
+              updateRepayAssetItem({
+                token: ASSET_LIST.USDC,
+                debt: 100,
+                apy: 5,
+              });
             },
-            apy: 3,
           }}
         />
       ) : (
@@ -68,10 +73,15 @@ const YourBorrows = () => {
           asset={{
             token: ASSET_LIST.USDC,
             debt: 100,
+            apy: 5,
             repay: () => {
               openRepayModal();
+              updateRepayAssetItem({
+                token: ASSET_LIST.USDC,
+                debt: 100,
+                apy: 5,
+              });
             },
-            apy: 3,
           }}
         />
       )}

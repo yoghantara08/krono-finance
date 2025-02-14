@@ -208,6 +208,7 @@ contract LendingPool is Ownable, ReentrancyGuard {
             revert();
 
         userAccounts[msg.sender].collateral[token] += amount;
+        tokenStates[token].totalSupplyAssets += amount;
 
         emit SupplyCollateral(msg.sender, token, amount);
     }
@@ -222,6 +223,8 @@ contract LendingPool is Ownable, ReentrancyGuard {
         if (!_isHealthy(msg.sender)) revert UnhealthyPosition();
 
         account.collateral[token] -= amount;
+        tokenStates[token].totalSupplyAssets -= amount;
+
         if (!IERC20(token).transfer(msg.sender, amount)) revert();
 
         emit WithdrawCollateral(msg.sender, token, amount);
@@ -338,12 +341,20 @@ contract LendingPool is Ownable, ReentrancyGuard {
         address token
     ) external view returns (MarketData memory) {
         TokenState storage state = tokenStates[token];
+
+        uint256 _supplyApy = (token == usdc || token == usdt)
+            ? _getSupplyApy(token)
+            : 0;
+        uint256 _borrowApy = (token == usdc || token == usdt)
+            ? config.borrowRate()
+            : 0;
+
         return
             MarketData({
                 totalSupply: state.totalSupplyAssets,
                 totalBorrow: state.totalBorrowAssets,
-                supplyApy: _getSupplyApy(token),
-                borrowApy: config.borrowRate()
+                supplyApy: _supplyApy,
+                borrowApy: _borrowApy
             });
     }
 

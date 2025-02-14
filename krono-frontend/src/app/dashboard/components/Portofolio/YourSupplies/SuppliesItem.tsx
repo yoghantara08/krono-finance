@@ -3,6 +3,7 @@ import React from "react";
 import Image from "next/image";
 
 import Button from "@/components/Button/Button";
+import { formatCurrency } from "@/lib/utils";
 import { IYourSuppliesItem } from "@/types";
 
 import { YOUR_SUPPLIES_COLUMNS } from "./YourSupplies";
@@ -14,9 +15,6 @@ interface SuppliesItemProps {
 const SuppliesItem = ({ asset }: SuppliesItemProps) => {
   const { token, balance, apy, withdraw } = asset;
 
-  const formatCurrency = (value?: number) =>
-    value ? `$${value.toLocaleString()}` : "-";
-
   return (
     <div className="flex w-full items-center p-4">
       {/* ASSET/TOKEN */}
@@ -26,7 +24,7 @@ const SuppliesItem = ({ asset }: SuppliesItemProps) => {
       >
         <Image src={token.image} alt={token.name} width={32} height={32} />
         <div>
-          <p>{token.name}</p>
+          <p className="text-sm">{token.name}</p>
           <p className="text-xs text-secondary">{token.symbol}</p>
         </div>
       </div>
@@ -37,7 +35,12 @@ const SuppliesItem = ({ asset }: SuppliesItemProps) => {
         style={{ width: YOUR_SUPPLIES_COLUMNS.BALANCE.width }}
       >
         <p>{balance ?? "-"}</p>
-        <p className="text-xs text-secondary">{formatCurrency(balance)}</p>
+        <p className="text-xs text-secondary">
+          $
+          {balance
+            ? formatCurrency(BigInt(balance) * (asset.token.price / 10n ** 18n))
+            : formatCurrency(0n)}
+        </p>
       </div>
 
       {/* SUPPLY APY */}

@@ -651,11 +651,6 @@
   },
   {
     "type": "error",
-    "name": "HealthyPosition",
-    "inputs": []
-  },
-  {
-    "type": "error",
     "name": "InsufficientCollateral",
     "inputs": []
   },
@@ -704,11 +699,6 @@
   {
     "type": "error",
     "name": "ReentrancyGuardReentrantCall",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "UnhealthyPosition",
     "inputs": []
   }
 ]

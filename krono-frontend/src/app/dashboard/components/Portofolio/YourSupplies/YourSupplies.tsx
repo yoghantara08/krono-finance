@@ -2,8 +2,10 @@
 import React from "react";
 
 import classNames from "classnames";
+import { useAccount } from "wagmi";
 
 import useDashboard from "@/app/dashboard/hooks/useDashboard";
+import useSupply from "@/app/dashboard/hooks/useSupply";
 import { ASSET_LIST } from "@/constant";
 import useWindowSize from "@/hooks/useWindowSize";
 
@@ -13,15 +15,18 @@ import SuppliesCard from "./SuppliesCard";
 import SuppliesItem from "./SuppliesItem";
 
 export const YOUR_SUPPLIES_COLUMNS = {
-  ASSET: { width: "25%", title: "Asset" },
+  ASSET: { width: "30%", title: "Asset" },
   BALANCE: { width: "25%", title: "Balance" },
   SUPPLY_APY: { width: "25%", title: "Supply APY" },
-  ACTIONS: { width: "25%", title: "" },
+  ACTIONS: { width: "20%", title: "" },
 } as const;
 
 const YourSupplies = () => {
   const { isMobile } = useWindowSize();
   const { openWithdrawModal } = useDashboard();
+  const { address } = useAccount();
+
+  const { balances } = useSupply(address);
 
   return (
     <div className="h-fit w-full rounded-md border bg-surface">
@@ -83,21 +88,41 @@ const YourSupplies = () => {
           <SuppliesItem
             asset={{
               token: ASSET_LIST.USDC,
-              balance: 200,
+              balance: Number(balances.TEST_USDC / 10n ** 18n),
               withdraw: () => {
                 openWithdrawModal();
               },
-              apy: 5.4,
+              apy: 6,
             }}
           />
           <SuppliesItem
             asset={{
               token: ASSET_LIST.USDT,
-              balance: 200,
+              balance: Number(balances.TEST_USDT / 10n ** 18n),
               withdraw: () => {
                 openWithdrawModal();
               },
-              apy: 5.4,
+              apy: 6,
+            }}
+          />
+          <SuppliesItem
+            asset={{
+              token: ASSET_LIST.MANTA,
+              balance: Number(balances.TEST_MANTA / 10n ** 18n),
+              withdraw: () => {
+                openWithdrawModal();
+              },
+              apy: 0,
+            }}
+          />
+          <SuppliesItem
+            asset={{
+              token: ASSET_LIST.WBTC,
+              balance: Number(balances.TEST_WBTC / 10n ** 18n),
+              withdraw: () => {
+                openWithdrawModal();
+              },
+              apy: 0,
             }}
           />
         </>

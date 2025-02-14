@@ -4,7 +4,7 @@ import DashboardOverview from "./components/DashboardOverview/DashboardOverview"
 import YourBorrows from "./components/Portofolio/YourBorrows/YourBorrows";
 import YourSupplies from "./components/Portofolio/YourSupplies/YourSupplies";
 
-const page = () => {
+const page = async () => {
   return (
     <div className="space-y-6 md:space-y-8">
       <DashboardOverview />

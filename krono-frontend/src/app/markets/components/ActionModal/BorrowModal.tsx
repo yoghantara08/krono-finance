@@ -64,7 +64,10 @@ const BorrowModal = () => {
           </div>
         </div>
 
-        <Button className="mb-1 mt-4 w-full lg:!text-lg">
+        <Button
+          className="mb-1 mt-4 w-full lg:!text-lg"
+          onClick={borrowAssetItem.action?.borrow}
+        >
           Borrow {borrowAssetItem.token.symbol}
         </Button>
       </div>

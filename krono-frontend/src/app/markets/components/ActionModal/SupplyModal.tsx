@@ -2,18 +2,88 @@ import React from "react";
 
 import Image from "next/image";
 
+import { erc20Abi } from "viem";
+import {
+  useAccount,
+  useBalance,
+  useWalletClient,
+  useWriteContract,
+} from "wagmi";
+
 import Button from "@/components/Button/Button";
 import NumberInput from "@/components/Input/NumberInput";
 import Modal from "@/components/Modal/Modal";
+import { LENDING_POOL_ADDRESS } from "@/constant";
 import useNumberInput from "@/hooks/useNumberInput";
+import { publicClient, supply } from "@/lib/services/lendingPoolService";
 import { quickAddPercentage } from "@/types";
 
 import useLendBorrow from "../../hooks/useLendBorrow";
 
 const SupplyModal = () => {
+  const { data: walletClient } = useWalletClient();
+  const { address: account } = useAccount();
+
   const { lendAssetItem, supplyModal, closeSupplyModal } = useLendBorrow();
 
-  const { displayValue, handleInputBlur, handleInputChange } = useNumberInput();
+  const { data, isLoading, error } = useBalance({
+    address: account,
+    token: lendAssetItem.token.address,
+  });
+
+  const balance = data?.value && Number(data.value) / 10 ** 18;
+
+  const { displayValue, value, handleInputBlur, handleInputChange } =
+    useNumberInput();
+
+  const { writeContractAsync } = useWriteContract();
+
+  const handleApprove = async () => {
+    try {
+      const amountInSmallestUnit = BigInt(Number(value) * 10 ** 18);
+
+      // Call approve with two arguments: spender (lending pool address) and amount
+      const tx = await writeContractAsync({
+        abi: erc20Abi,
+        address: lendAssetItem.token.address,
+        functionName: "approve",
+        args: [LENDING_POOL_ADDRESS, amountInSmallestUnit],
+      });
+
+      console.log(tx);
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
+  const handleSupply = async () => {
+    if (!walletClient || !account) return;
+    // Supply token to the protocol
+    const amount = BigInt(value * 10 ** 18);
+
+    try {
+      const hash = await supply(
+        lendAssetItem.token.address,
+        amount,
+        walletClient,
+        account,
+      );
+      console.log(hash);
+
+      // Wait for the transaction receipt (using the public client if available)
+      const receipt = await publicClient.waitForTransactionReceipt({
+        hash,
+      });
+      console.log("Transaction receipt:", receipt);
+
+      if (receipt.status === "reverted") {
+        console.error("Transaction reverted.");
+        // Optionally decode the revert reason if your provider supports it.
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <Modal
@@ -50,7 +120,9 @@ const SupplyModal = () => {
 
           {/* BALANCE */}
           <div className="flex items-center justify-between gap-3 text-sm">
-            <p>Balance: 100 {lendAssetItem.token.symbol}</p>
+            <p>
+              Balance: {balance?.toLocaleString()} {lendAssetItem.token.symbol}
+            </p>
             <div className="flex items-center gap-1.5">
               {quickAddPercentage.map((percentage) => (
                 <button
@@ -64,7 +136,18 @@ const SupplyModal = () => {
           </div>
         </div>
 
-        <Button className="mb-1 mt-4 w-full lg:!text-lg">
+        <Button
+          className="mb-1 mt-4 w-full lg:!text-lg"
+          onClick={handleApprove}
+          disabled={!value}
+        >
+          Approve
+        </Button>
+        <Button
+          className="mb-1 mt-4 w-full lg:!text-lg"
+          onClick={handleSupply}
+          disabled={!value}
+        >
           Supply {lendAssetItem.token.symbol}
         </Button>
       </div>

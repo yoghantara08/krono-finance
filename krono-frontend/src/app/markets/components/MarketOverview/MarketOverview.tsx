@@ -1,18 +1,28 @@
 import React from "react";
 
+import { TEST_MANTA, TEST_USDC, TEST_USDT, TEST_WBTC } from "@/constant";
+import { getAggregateMarketStats } from "@/lib/services/lendingPoolService";
+
 const MarketOverview = () => {
+  const marketData = getAggregateMarketStats([
+    TEST_USDC,
+    TEST_USDT,
+    TEST_WBTC,
+    TEST_MANTA,
+  ]);
+
   const overviewData = [
     {
       title: "Total market size",
-      value: 741.67,
+      value: marketData.then((data) => Number(data.totalMarketSize) / 10 ** 18),
     },
     {
       title: "Total available",
-      value: 429.69,
+      value: marketData.then((data) => Number(data.totalAvailable) / 10 ** 18),
     },
     {
       title: "Total borrows",
-      value: 311.98,
+      value: marketData.then((data) => Number(data.totalBorrows) / 10 ** 18),
     },
   ];
 
@@ -28,7 +38,7 @@ const MarketOverview = () => {
             <p className="text-xs text-secondary md:text-sm">{data.title}</p>
             <p className="font-medium md:text-2xl">
               <span className="text-secondary">$</span>
-              {data.value}M
+              {data.value}
             </p>
           </div>
         ))}

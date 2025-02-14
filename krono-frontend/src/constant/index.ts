@@ -4,31 +4,39 @@ export const PROJECT_ID =
   process.env.NEXT_PUBLIC_RAINBOW_KIT_PROJECT_ID ??
   "YOUR RAINBOW KIT PROJECT ID";
 
-export type AssetList = "USDC" | "USDT" | "WBTC" | "WETH";
+export const LENDING_POOL_ADDRESS =
+  "0x9eb022eA7e31326e297eC0364a2ff34039dbE34d";
+
+export const TEST_USDC = "0x47a347287D6178591208c6681fD4c7bffd9DA6fB";
+export const TEST_USDT = "0x2F2DD40B0111fe8659d1B7e36BaB815480075167";
+export const TEST_WBTC = "0xAc69Dc846063E0C0cefec2036a84FeF9A4a7061a";
+export const TEST_MANTA = "0x77f0bd951088fE4b8Cd756F1a0E0fc904C5eC981";
+
+export type AssetList = "USDC" | "USDT" | "WBTC" | "MANTA";
 
 export const ASSET_LIST: Record<AssetList, IToken> = {
   USDC: {
     name: "USD Coin",
     symbol: "USDC",
-    address: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+    address: TEST_USDC,
     image: "/tokens/usdc.png",
   },
   USDT: {
     name: "Tether USD",
     symbol: "USDT",
-    address: "0xc2132d05d31c914a87c6611c10748aeb04b58e8f",
+    address: TEST_USDT,
     image: "/tokens/usdt.png",
+  },
+  MANTA: {
+    name: "Manta Network",
+    symbol: "MANTA",
+    address: TEST_MANTA,
+    image: "/tokens/manta.png",
   },
   WBTC: {
     name: "Wrapped Bitcoin",
     symbol: "WBTC",
-    address: "0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6",
+    address: TEST_WBTC,
     image: "/tokens/wbtc.png",
-  },
-  WETH: {
-    name: "Wrapped Ethereum",
-    symbol: "WETH",
-    address: "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
-    image: "/tokens/weth.png",
   },
 };

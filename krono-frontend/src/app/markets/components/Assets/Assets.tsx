@@ -1,7 +1,9 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
+import { AssetList } from "@/constant";
 import useWindowSize from "@/hooks/useWindowSize";
+import { IAssetItem } from "@/types";
 
 import useLendBorrow from "../../hooks/useLendBorrow";
 import BorrowModal from "../ActionModal/BorrowModal";
@@ -12,8 +14,27 @@ import AssetHeader from "./AssetHeader";
 import AssetItem from "./AssetItem";
 
 const Assets = () => {
-  const { AVAILABLE_ASSETS } = useLendBorrow();
+  const { fetchAvailableAssets } = useLendBorrow();
   const { width } = useWindowSize();
+
+  const [assets, setAssets] = useState<Record<AssetList, IAssetItem> | null>(
+    null,
+  );
+
+  useEffect(() => {
+    const loadAssets = async () => {
+      try {
+        const availableAssets = await fetchAvailableAssets();
+        setAssets(availableAssets);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    loadAssets();
+  }, []);
+
+  if (!assets) return <div>No assets available</div>;
 
   return (
     <section className="space-y-3">
@@ -21,13 +42,13 @@ const Assets = () => {
       {width > 1024 ? (
         <>
           <AssetHeader />
-          {Object.values(AVAILABLE_ASSETS).map((asset) => (
+          {Object.values(assets).map((asset) => (
             <AssetItem key={asset.token.name} asset={asset} />
           ))}
         </>
       ) : (
         <>
-          {Object.values(AVAILABLE_ASSETS).map((asset) => (
+          {Object.values(assets).map((asset) => (
             <AssetCard key={asset.token.name} asset={asset} />
           ))}
         </>

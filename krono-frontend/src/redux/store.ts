@@ -12,7 +12,7 @@ const persistConfig = {
   key: "krono_finance",
   storage,
   stateReconciler: autoMergeLevel1,
-  blacklist: ["modal"],
+  blacklist: ["modal", "lendBorrow"],
 };
 
 const rootReducer = combineReducers({

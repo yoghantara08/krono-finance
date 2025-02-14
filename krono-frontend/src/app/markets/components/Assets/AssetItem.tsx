@@ -19,9 +19,6 @@ const AssetItem = ({ asset }: AssetItemProps) => {
 
   const { updateLendAssetItem, updateBorrowAssetItem } = useLendBorrow();
 
-  const formatCurrency = (value?: number) =>
-    value ? `$${value.toLocaleString()}` : "-";
-
   return (
     <div className="flex w-full items-center rounded-lg border bg-surface px-5 py-3">
       {/* ASSET/TOKEN */}
@@ -41,9 +38,9 @@ const AssetItem = ({ asset }: AssetItemProps) => {
         className="text-center"
         style={{ width: ASSET_COLUMNS.TOTAL_SUPPLIED.width }}
       >
-        <p>{totalSupplied ?? "-"}</p>
+        <p>{Number(totalSupplied) / 10 ** 18 || "-"}</p>
         <p className="text-xs text-secondary">
-          {formatCurrency(totalSupplied)}
+          {Number(totalSupplied) / 10 ** 18}
         </p>
       </div>
 
@@ -61,9 +58,7 @@ const AssetItem = ({ asset }: AssetItemProps) => {
         style={{ width: ASSET_COLUMNS.TOTAL_BORROWED.width }}
       >
         <p>{totalBorrowed || "-"}</p>
-        <p className="text-xs text-secondary">
-          {formatCurrency(totalBorrowed)}
-        </p>
+        <p className="text-xs text-secondary">{totalBorrowed || "-"}</p>
       </div>
 
       {/* BORROW APY */}
@@ -71,7 +66,9 @@ const AssetItem = ({ asset }: AssetItemProps) => {
         className="text-center font-medium"
         style={{ width: ASSET_COLUMNS.BORROW_APY.width }}
       >
-        {borrowApy ? `${borrowApy}%` : "-"}
+        {borrowApy && (token.symbol === "USDC" || token.symbol === "USDT")
+          ? `${borrowApy}%`
+          : "-"}
       </p>
 
       {/* ACTIONS */}

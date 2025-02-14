@@ -6,10 +6,11 @@ import { usePathname } from "next/navigation";
 
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import classNames from "classnames";
+import { useAccount, useWalletClient } from "wagmi";
+
+import { claimAllTokens } from "@/lib/services/tokenFaucetService";
 
 import Button from "../Button/Button";
-import { useAccount, useWalletClient } from "wagmi";
-import { claimAllTokens } from "@/lib/services/tokenFaucetService";
 
 const Navbar = () => {
   const pathname = usePathname();

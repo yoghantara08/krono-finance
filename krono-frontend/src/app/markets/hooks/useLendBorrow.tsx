@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { ASSET_LIST, AssetList } from "@/constant";
@@ -38,7 +39,7 @@ const useLendBorrow = () => {
     return await getMarketData(ASSET_LIST[token].address);
   };
 
-  const fetchAvailableAssets = async (): Promise<
+  const fetchAvailableAssets = useCallback(async (): Promise<
     Record<AssetList, IAssetItem>
   > => {
     // Fetch market data for all tokens concurrently
@@ -57,12 +58,8 @@ const useLendBorrow = () => {
         totalBorrowed: USDCData.totalBorrow,
         borrowApy: USDCData.borrowApy,
         action: {
-          supply: () => {
-            openSupplyModal();
-          },
-          borrow: () => {
-            openBorrowModal();
-          },
+          supply: () => openSupplyModal(),
+          borrow: () => openBorrowModal(),
         },
       },
       USDT: {
@@ -72,12 +69,8 @@ const useLendBorrow = () => {
         totalBorrowed: USDTData.totalBorrow,
         borrowApy: USDTData.borrowApy,
         action: {
-          supply: () => {
-            openSupplyModal();
-          },
-          borrow: () => {
-            openBorrowModal();
-          },
+          supply: () => openSupplyModal(),
+          borrow: () => openBorrowModal(),
         },
       },
       MANTA: {
@@ -87,9 +80,7 @@ const useLendBorrow = () => {
         totalBorrowed: MANTAData.totalBorrow,
         borrowApy: MANTAData.borrowApy,
         action: {
-          supply: () => {
-            openSupplyModal();
-          },
+          supply: () => openSupplyModal(),
         },
       },
       WBTC: {
@@ -99,15 +90,13 @@ const useLendBorrow = () => {
         totalBorrowed: WBTCData.totalBorrow,
         borrowApy: WBTCData.borrowApy,
         action: {
-          supply: () => {
-            openSupplyModal();
-          },
+          supply: () => openSupplyModal(),
         },
       },
     };
 
     return AVAILABLE_ASSETS;
-  };
+  }, [openBorrowModal, openSupplyModal]);
 
   return {
     fetchAvailableAssets,

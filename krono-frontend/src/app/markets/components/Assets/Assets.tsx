@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 
 import { AssetList } from "@/constant";
@@ -32,7 +33,7 @@ const Assets = () => {
     };
 
     loadAssets();
-  }, []);
+  }, [fetchAvailableAssets]);
 
   if (!assets) return <div>No assets available</div>;
 

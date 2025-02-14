@@ -17,8 +17,8 @@ contract LendingPool is Ownable, ReentrancyGuard {
     error HealthyPosition();
 
     struct UserAccount {
-        uint256 supplyShares;
-        uint256 borrowShares;
+        mapping(address => uint256) supplyShares;
+        mapping(address => uint256) borrowShares;
         mapping(address => uint256) collateral;
     }
 
@@ -29,6 +29,14 @@ contract LendingPool is Ownable, ReentrancyGuard {
         uint256 borrowApy;
     }
 
+    struct TokenState {
+        uint256 totalSupplyAssets;
+        uint256 totalSupplyShares;
+        uint256 totalBorrowAssets;
+        uint256 totalBorrowShares;
+        uint256 lastAccrued;
+    }
+
     address public immutable usdc;
     address public immutable usdt;
     address public immutable wbtc;
@@ -37,15 +45,8 @@ contract LendingPool is Ownable, ReentrancyGuard {
     PriceOracle public immutable priceOracle;
     LendingConfig public immutable config;
 
-    uint256 public totalSupplyAssets;
-    uint256 public totalSupplyShares;
-    uint256 public totalBorrowAssets;
-    uint256 public totalBorrowShares;
-    uint256 public lastAccrued;
-
-    mapping(address => UserAccount) public userAccounts;
-    mapping(address => uint256) public totalDeposits;
-    mapping(address => uint256) public totalBorrows;
+    mapping(address => UserAccount) private userAccounts;
+    mapping(address => TokenState) public tokenStates;
 
     event Supply(
         address indexed user,
@@ -98,83 +99,102 @@ contract LendingPool is Ownable, ReentrancyGuard {
         manta = _manta;
         priceOracle = PriceOracle(_priceOracle);
         config = LendingConfig(_config);
-        lastAccrued = block.timestamp;
+        tokenStates[usdc].lastAccrued = block.timestamp;
+        tokenStates[usdt].lastAccrued = block.timestamp;
     }
 
-    // View functions for dashboard
-    function getUserNetWorth(address user) external view returns (uint256) {
-        UserAccount storage account = userAccounts[user];
-
-        // Calculate supplies in USD
-        uint256 supplyValue = (account.supplyShares * totalSupplyAssets) /
-            totalSupplyShares;
-
-        // Calculate borrows in USD
-        uint256 borrowValue = (account.borrowShares * totalBorrowAssets) /
-            totalBorrowShares;
-
-        // Calculate collateral in USD
-        uint256 collateralValue = (account.collateral[wbtc] *
-            priceOracle.getTokenPrice(wbtc)) +
-            (account.collateral[manta] * priceOracle.getTokenPrice(manta));
-
-        return (supplyValue + collateralValue) - borrowValue;
-    }
-
-    function getMarketData(
-        address token
-    ) external view returns (MarketData memory) {
-        return
-            MarketData({
-                totalSupply: totalDeposits[token],
-                totalBorrow: totalBorrows[token],
-                supplyApy: _getSupplyApy(),
-                borrowApy: config.borrowRate()
-            });
-    }
-
-    // Core functions
     function supply(address token, uint256 amount) external nonReentrant {
         if (token != usdc && token != usdt) revert InvalidToken();
         if (amount == 0) revert InvalidAmount();
 
-        _accrueInterest();
+        TokenState storage state = tokenStates[token];
 
-        uint256 shares = totalSupplyShares == 0
+        _accrueInterest(state);
+
+        uint256 shares = state.totalSupplyShares == 0
             ? amount
-            : (amount * totalSupplyShares) / totalSupplyAssets;
+            : (amount * state.totalSupplyShares) / state.totalSupplyAssets;
 
         if (!IERC20(token).transferFrom(msg.sender, address(this), amount))
             revert();
 
-        totalSupplyAssets += amount;
-        totalSupplyShares += shares;
-        userAccounts[msg.sender].supplyShares += shares;
-        totalDeposits[token] += amount;
+        state.totalSupplyAssets += amount;
+        state.totalSupplyShares += shares;
+        userAccounts[msg.sender].supplyShares[token] += shares;
 
         emit Supply(msg.sender, token, amount, shares);
     }
 
     function withdraw(address token, uint256 shares) external nonReentrant {
         UserAccount storage account = userAccounts[msg.sender];
+        TokenState storage state = tokenStates[token];
+
         if (token != usdc && token != usdt) revert InvalidToken();
-        if (shares == 0 || shares > account.supplyShares)
+        if (shares == 0 || shares > account.supplyShares[token])
             revert InsufficientShares();
 
-        _accrueInterest();
+        _accrueInterest(state);
 
-        uint256 amount = (shares * totalSupplyAssets) / totalSupplyShares;
+        uint256 amount = (shares * state.totalSupplyAssets) /
+            state.totalSupplyShares;
         if (IERC20(token).balanceOf(address(this)) < amount)
             revert InsufficientLiquidity();
 
-        totalSupplyAssets -= amount;
-        totalSupplyShares -= shares;
-        account.supplyShares -= shares;
-        totalDeposits[token] -= amount;
+        state.totalSupplyAssets -= amount;
+        state.totalSupplyShares -= shares;
+        account.supplyShares[token] -= shares;
 
         if (!IERC20(token).transfer(msg.sender, amount)) revert();
 
         emit Withdraw(msg.sender, token, shares, amount);
+    }
+
+    function borrow(address token, uint256 amount) external nonReentrant {
+        if (token != usdc && token != usdt) revert InvalidToken();
+        if (amount == 0) revert InvalidAmount();
+
+        TokenState storage state = tokenStates[token];
+
+        _accrueInterest(state);
+
+        uint256 shares = state.totalBorrowShares == 0
+            ? amount
+            : (amount * state.totalBorrowShares) / state.totalBorrowAssets;
+
+        state.totalBorrowAssets += amount;
+        state.totalBorrowShares += shares;
+        userAccounts[msg.sender].borrowShares[token] += shares;
+
+        if (!_isHealthy(msg.sender)) revert UnhealthyPosition();
+        if (IERC20(token).balanceOf(address(this)) < amount)
+            revert InsufficientLiquidity();
+
+        if (!IERC20(token).transfer(msg.sender, amount)) revert();
+
+        emit Borrow(msg.sender, token, amount, shares);
+    }
+
+    function repay(address token, uint256 shares) external nonReentrant {
+        UserAccount storage account = userAccounts[msg.sender];
+        TokenState storage state = tokenStates[token];
+
+        if (token != usdc && token != usdt) revert InvalidToken();
+        if (shares == 0 || shares > account.borrowShares[token])
+            revert InsufficientShares();
+
+        _accrueInterest(state);
+
+        uint256 amount = (shares * state.totalBorrowAssets) /
+            state.totalBorrowShares;
+
+        state.totalBorrowAssets -= amount;
+        state.totalBorrowShares -= shares;
+        account.borrowShares[token] -= shares;
+
+        if (!IERC20(token).transferFrom(msg.sender, address(this), amount))
+            revert();
+
+        emit Repay(msg.sender, token, shares, amount);
     }
 
     function supplyCollateral(
@@ -207,86 +227,144 @@ contract LendingPool is Ownable, ReentrancyGuard {
         emit WithdrawCollateral(msg.sender, token, amount);
     }
 
-    function borrow(address token, uint256 amount) external nonReentrant {
-        if (token != usdc && token != usdt) revert InvalidToken();
-        if (amount == 0) revert InvalidAmount();
-
-        _accrueInterest();
-
-        uint256 shares = totalBorrowShares == 0
-            ? amount
-            : (amount * totalBorrowShares) / totalBorrowAssets;
-
-        totalBorrowAssets += amount;
-        totalBorrowShares += shares;
-        userAccounts[msg.sender].borrowShares += shares;
-        totalBorrows[token] += amount;
-
-        if (!_isHealthy(msg.sender)) revert UnhealthyPosition();
-        if (IERC20(token).balanceOf(address(this)) < amount)
-            revert InsufficientLiquidity();
-
-        if (!IERC20(token).transfer(msg.sender, amount)) revert();
-
-        emit Borrow(msg.sender, token, amount, shares);
-    }
-
-    function repay(address token, uint256 shares) external nonReentrant {
-        UserAccount storage account = userAccounts[msg.sender];
-        if (token != usdc && token != usdt) revert InvalidToken();
-        if (shares == 0 || shares > account.borrowShares)
-            revert InsufficientShares();
-
-        _accrueInterest();
-
-        uint256 amount = (shares * totalBorrowAssets) / totalBorrowShares;
-
-        totalBorrowAssets -= amount;
-        totalBorrowShares -= shares;
-        account.borrowShares -= shares;
-        totalBorrows[token] -= amount;
-
-        if (!IERC20(token).transferFrom(msg.sender, address(this), amount))
-            revert();
-
-        emit Repay(msg.sender, token, shares, amount);
-    }
-
     // Internal functions
-    function _accrueInterest() internal {
-        uint256 elapsedTime = block.timestamp - lastAccrued;
-        if (elapsedTime > 0 && totalBorrowAssets > 0) {
-            uint256 interestPerYear = (totalBorrowAssets *
-                config.borrowRate()) / 100;
+    function _accrueInterest(TokenState storage state) internal {
+        uint256 elapsedTime = block.timestamp - state.lastAccrued;
+
+        if (elapsedTime > 0 && state.totalBorrowAssets > 0) {
+            uint256 utilizationRate = (state.totalBorrowAssets * 100) /
+                state.totalSupplyAssets;
+            uint256 borrowRate = config.borrowRate();
+            uint256 interestPerYear = (state.totalBorrowAssets *
+                borrowRate *
+                utilizationRate) / 10000;
             uint256 interest = (interestPerYear * elapsedTime) / 365 days;
 
             uint256 platformFee = (interest * config.platformFee()) / 100;
             uint256 supplierInterest = interest - platformFee;
 
-            totalBorrowAssets += interest;
-            totalSupplyAssets += supplierInterest;
-            lastAccrued = block.timestamp;
+            state.totalBorrowAssets += interest;
+            state.totalSupplyAssets += supplierInterest;
+            state.lastAccrued = block.timestamp;
+        } else {
+            state.lastAccrued = block.timestamp;
         }
     }
 
     function _isHealthy(address user) internal view returns (bool) {
         UserAccount storage account = userAccounts[user];
-        if (account.borrowShares == 0) return true;
+        TokenState storage usdcState = tokenStates[usdc];
+        TokenState storage usdtState = tokenStates[usdt];
 
-        uint256 borrowValue = (account.borrowShares * totalBorrowAssets) /
-            totalBorrowShares;
+        uint256 totalBorrowValue = 0;
+
+        // Calculate USDC borrow value
+        if (usdcState.totalBorrowShares > 0) {
+            totalBorrowValue +=
+                (account.borrowShares[usdc] * usdcState.totalBorrowAssets) /
+                usdcState.totalBorrowShares;
+        }
+
+        // Calculate USDT borrow value
+        if (usdtState.totalBorrowShares > 0) {
+            totalBorrowValue +=
+                (account.borrowShares[usdt] * usdtState.totalBorrowAssets) /
+                usdtState.totalBorrowShares;
+        }
+
+        if (totalBorrowValue == 0) return true;
+
         uint256 collateralValue = (account.collateral[wbtc] *
             priceOracle.getTokenPrice(wbtc)) +
             (account.collateral[manta] * priceOracle.getTokenPrice(manta));
 
         return
-            (borrowValue * 100) <=
+            totalBorrowValue <=
             (collateralValue * config.liquidationThreshold()) / 100;
     }
 
-    function _getSupplyApy() internal view returns (uint256) {
+    function _getSupplyApy(address token) internal view returns (uint256) {
+        TokenState storage state = tokenStates[token];
+        if (state.totalSupplyAssets == 0) return 0;
+
+        uint256 utilization = (state.totalBorrowAssets * 100) /
+            state.totalSupplyAssets;
         uint256 borrowRate = config.borrowRate();
         uint256 platformFee = config.platformFee();
-        return (borrowRate * (100 - platformFee)) / 100;
+
+        // APY is affected by utilization rate
+        return (borrowRate * utilization * (100 - platformFee)) / 10000;
+    }
+
+    function getUserNetWorth(address user) external view returns (uint256) {
+        UserAccount storage account = userAccounts[user];
+        uint256 totalValue = 0;
+
+        // Calculate USDC supplies and borrows
+        TokenState storage usdcState = tokenStates[usdc];
+        if (usdcState.totalSupplyShares > 0) {
+            totalValue +=
+                (account.supplyShares[usdc] * usdcState.totalSupplyAssets) /
+                usdcState.totalSupplyShares;
+        }
+        if (usdcState.totalBorrowShares > 0) {
+            totalValue -=
+                (account.borrowShares[usdc] * usdcState.totalBorrowAssets) /
+                usdcState.totalBorrowShares;
+        }
+
+        // Calculate USDT supplies and borrows
+        TokenState storage usdtState = tokenStates[usdt];
+        if (usdtState.totalSupplyShares > 0) {
+            totalValue +=
+                (account.supplyShares[usdt] * usdtState.totalSupplyAssets) /
+                usdtState.totalSupplyShares;
+        }
+        if (usdtState.totalBorrowShares > 0) {
+            totalValue -=
+                (account.borrowShares[usdt] * usdtState.totalBorrowAssets) /
+                usdtState.totalBorrowShares;
+        }
+
+        // Calculate collateral value
+        totalValue +=
+            (account.collateral[wbtc] * priceOracle.getTokenPrice(wbtc)) +
+            (account.collateral[manta] * priceOracle.getTokenPrice(manta));
+
+        return totalValue;
+    }
+
+    function getMarketData(
+        address token
+    ) external view returns (MarketData memory) {
+        TokenState storage state = tokenStates[token];
+        return
+            MarketData({
+                totalSupply: state.totalSupplyAssets,
+                totalBorrow: state.totalBorrowAssets,
+                supplyApy: _getSupplyApy(token),
+                borrowApy: config.borrowRate()
+            });
+    }
+
+    function getUserSupplyShares(
+        address user,
+        address token
+    ) external view returns (uint256) {
+        return userAccounts[user].supplyShares[token];
+    }
+
+    function getUserBorrowShares(
+        address user,
+        address token
+    ) external view returns (uint256) {
+        return userAccounts[user].borrowShares[token];
+    }
+
+    function getUserCollateral(
+        address user,
+        address token
+    ) external view returns (uint256) {
+        return userAccounts[user].collateral[token];
     }
 }

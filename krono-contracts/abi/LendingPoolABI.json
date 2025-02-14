@@ -109,6 +109,54 @@
   },
   {
     "type": "function",
+    "name": "getUserBorrowShares",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "token",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getUserCollateral",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "token",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "getUserNetWorth",
     "inputs": [
       {
@@ -128,8 +176,19 @@
   },
   {
     "type": "function",
-    "name": "lastAccrued",
-    "inputs": [],
+    "name": "getUserSupplyShares",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "token",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
     "outputs": [
       {
         "name": "",
@@ -241,33 +300,7 @@
   },
   {
     "type": "function",
-    "name": "totalBorrowAssets",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "totalBorrowShares",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "totalBorrows",
+    "name": "tokenStates",
     "inputs": [
       {
         "name": "",
@@ -277,52 +310,27 @@
     ],
     "outputs": [
       {
-        "name": "",
+        "name": "totalSupplyAssets",
         "type": "uint256",
         "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "totalDeposits",
-    "inputs": [
+      },
       {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
+        "name": "totalSupplyShares",
         "type": "uint256",
         "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "totalSupplyAssets",
-    "inputs": [],
-    "outputs": [
+      },
       {
-        "name": "",
+        "name": "totalBorrowAssets",
         "type": "uint256",
         "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "totalSupplyShares",
-    "inputs": [],
-    "outputs": [
+      },
       {
-        "name": "",
+        "name": "totalBorrowShares",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "lastAccrued",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -364,30 +372,6 @@
         "name": "",
         "type": "address",
         "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "userAccounts",
-    "inputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "supplyShares",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "borrowShares",
-        "type": "uint256",
-        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"

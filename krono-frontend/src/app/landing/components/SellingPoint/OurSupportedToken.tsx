@@ -5,12 +5,13 @@ import Link from "next/link";
 
 import { MoveRightIcon } from "lucide-react";
 
+import Button from "@/components/Button/Button";
 import { ASSET_LIST } from "@/constant";
 
 const OurSupportedToken = () => {
   return (
     <section className="flex w-full justify-center">
-      <div className="mx-3 flex w-full max-w-[1200px] flex-col items-center space-y-6 py-10">
+      <div className="mx-3 flex w-full max-w-[1200px] flex-col items-center space-y-6 pb-10">
         <h1 className="text-center text-4xl font-semibold">
           Our <span className="text-primary-hover">Supported</span> Tokens
         </h1>
@@ -48,6 +49,15 @@ const OurSupportedToken = () => {
             </div>
           ))}
         </div>
+
+        <Link href={"/markets"}>
+          <Button className="md:w-[300px]">
+            <div className="flex items-center gap-1">
+              <span>Start Earning with Krono</span>
+              <MoveRightIcon size={20} className="mt-0.5" />
+            </div>
+          </Button>
+        </Link>
       </div>
     </section>
   );

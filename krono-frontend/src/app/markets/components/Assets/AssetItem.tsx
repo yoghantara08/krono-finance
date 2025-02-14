@@ -57,8 +57,10 @@ const AssetItem = ({ asset }: AssetItemProps) => {
         className="text-center"
         style={{ width: ASSET_COLUMNS.TOTAL_BORROWED.width }}
       >
-        <p>{totalBorrowed || "-"}</p>
-        <p className="text-xs text-secondary">{totalBorrowed || "-"}</p>
+        <p>{Number(totalBorrowed) / 10 ** 18 || "-"}</p>
+        <p className="text-xs text-secondary">
+          {Number(totalBorrowed) / 10 ** 18 || "-"}
+        </p>
       </div>
 
       {/* BORROW APY */}

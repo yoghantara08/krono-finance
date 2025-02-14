@@ -14,9 +14,6 @@ const AssetCard = ({ asset }: AssetItemProps) => {
 
   const { updateLendAssetItem, updateBorrowAssetItem } = useLendBorrow();
 
-  const formatCurrency = (value?: number) =>
-    value ? `$${value.toLocaleString()}` : "-";
-
   return (
     <div className="w-full space-y-4 rounded-md border bg-surface p-3">
       <div className="flex gap-1.5">
@@ -32,9 +29,9 @@ const AssetCard = ({ asset }: AssetItemProps) => {
           <p>Total Supplied</p>
 
           <div>
-            <p>{totalSupplied ?? "-"}</p>
+            <p>{Number(totalSupplied) / 10 ** 18 || "-"}</p>
             <p className="text-xs text-secondary">
-              {formatCurrency(totalSupplied)}
+              {Number(totalSupplied) / 10 ** 18}
             </p>
           </div>
         </div>
@@ -50,9 +47,9 @@ const AssetCard = ({ asset }: AssetItemProps) => {
           <p>Total Borrowed</p>
 
           <div>
-            <p>{totalBorrowed || "-"}</p>
+            <p>{Number(totalBorrowed) / 10 ** 18 || "-"}</p>
             <p className="text-xs text-secondary">
-              {formatCurrency(totalBorrowed)}
+              {Number(totalBorrowed) / 10 ** 18}
             </p>
           </div>
         </div>

@@ -3,7 +3,8 @@ import React, { ReactNode } from "react";
 
 import classNames from "classnames";
 
-import LandingFooter from "./LandingFooter";
+import Footer from "@/components/Layout/Footer";
+
 import LandingNavbar from "./LandingNavbar";
 
 interface LayoutWrapperProps {
@@ -26,7 +27,7 @@ const LandingLayout = ({ children, className }: LayoutWrapperProps) => {
         <div className="flex w-full justify-center">
           <main className={classNames("w-full", className)}>{children}</main>
         </div>
-        <LandingFooter />
+        <Footer />
       </div>
     </div>
   );

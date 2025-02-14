@@ -34,7 +34,7 @@ const AssetCard = ({ asset }: AssetItemProps) => {
           <p>Total Supplied</p>
 
           <div className="text-end">
-            <p>{Number(totalSupplied) / 10 ** 18 || "-"}</p>
+            <p>{(Number(totalSupplied) / 10 ** 18).toFixed(2) || "-"}</p>
             <p className="text-xs text-secondary">
               ${usdValue.toLocaleString()}
             </p>
@@ -48,11 +48,11 @@ const AssetCard = ({ asset }: AssetItemProps) => {
       </div>
 
       <div className="space-y-2 text-sm">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between text-end">
           <p>Total Borrowed</p>
 
           <div>
-            <p>{Number(totalBorrowed) / 10 ** 18 || "-"}</p>
+            <p>{(Number(totalBorrowed) / 10 ** 18).toFixed(2) || "-"}</p>
             <p className="text-xs text-secondary">
               ${borrowUsdValue.toLocaleString()}
             </p>

@@ -15,9 +15,9 @@ const HeroBanner = () => {
       </div>
       <div className="mt-2 max-w-[400px] text-xs text-secondary sm:max-w-[500px] sm:text-sm md:mt-5 md:max-w-[700px] md:text-base">
         <p>
-          Krono Finance is a Lending Borrow Protocol built on the Manta Network,
-          offering a secure, efficient, and user-friendly decentralized finance
-          solution.
+          Krono Finance is a Lending & Borrow Protocol built on the Manta
+          Network, offering a secure, efficient, and user-friendly decentralized
+          finance solution.
         </p>
       </div>
       <Link href={"/markets"}>

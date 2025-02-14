@@ -20,7 +20,8 @@ const AssetItem = ({ asset }: AssetItemProps) => {
   const { updateLendAssetItem, updateBorrowAssetItem } = useLendBorrow();
 
   const usdValue =
-    (Number(totalSupplied) / 10 ** 18) * (Number(token.price) / 10 ** 18);
+    (Math.floor(Number(totalSupplied)) / 10 ** 18) *
+    (Number(token.price) / 10 ** 18);
   const borrowUsdValue =
     (Number(totalBorrowed) / 10 ** 18) * (Number(token.price) / 10 ** 18);
 

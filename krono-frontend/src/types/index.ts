@@ -5,6 +5,7 @@ export interface IToken {
   symbol: string;
   address: Address;
   image: string;
+  price: bigint;
 }
 
 export interface IAssetItem {

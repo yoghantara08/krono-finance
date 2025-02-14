@@ -14,6 +14,11 @@ const AssetCard = ({ asset }: AssetItemProps) => {
 
   const { updateLendAssetItem, updateBorrowAssetItem } = useLendBorrow();
 
+  const usdValue =
+    (Number(totalSupplied) / 10 ** 18) * (Number(token.price) / 10 ** 18);
+  const borrowUsdValue =
+    (Number(totalBorrowed) / 10 ** 18) * (Number(token.price) / 10 ** 18);
+
   return (
     <div className="w-full space-y-4 rounded-md border bg-surface p-3">
       <div className="flex gap-1.5">
@@ -28,10 +33,10 @@ const AssetCard = ({ asset }: AssetItemProps) => {
         <div className="flex items-center justify-between">
           <p>Total Supplied</p>
 
-          <div>
+          <div className="text-end">
             <p>{Number(totalSupplied) / 10 ** 18 || "-"}</p>
             <p className="text-xs text-secondary">
-              {Number(totalSupplied) / 10 ** 18}
+              ${usdValue.toLocaleString()}
             </p>
           </div>
         </div>
@@ -49,7 +54,7 @@ const AssetCard = ({ asset }: AssetItemProps) => {
           <div>
             <p>{Number(totalBorrowed) / 10 ** 18 || "-"}</p>
             <p className="text-xs text-secondary">
-              {Number(totalBorrowed) / 10 ** 18}
+              ${borrowUsdValue.toLocaleString()}
             </p>
           </div>
         </div>

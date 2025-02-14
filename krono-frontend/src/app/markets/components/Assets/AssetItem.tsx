@@ -19,6 +19,11 @@ const AssetItem = ({ asset }: AssetItemProps) => {
 
   const { updateLendAssetItem, updateBorrowAssetItem } = useLendBorrow();
 
+  const usdValue =
+    (Number(totalSupplied) / 10 ** 18) * (Number(token.price) / 10 ** 18);
+  const borrowUsdValue =
+    (Number(totalBorrowed) / 10 ** 18) * (Number(token.price) / 10 ** 18);
+
   return (
     <div className="flex w-full items-center rounded-lg border bg-surface px-5 py-3">
       {/* ASSET/TOKEN */}
@@ -38,10 +43,8 @@ const AssetItem = ({ asset }: AssetItemProps) => {
         className="text-center"
         style={{ width: ASSET_COLUMNS.TOTAL_SUPPLIED.width }}
       >
-        <p>{Number(totalSupplied) / 10 ** 18 || "-"}</p>
-        <p className="text-xs text-secondary">
-          {Number(totalSupplied) / 10 ** 18}
-        </p>
+        <p>{(Number(totalSupplied) / 10 ** 18).toFixed(2) || "-"}</p>
+        <p className="text-xs text-secondary">${usdValue.toLocaleString()}</p>
       </div>
 
       {/* SUPPLY APY */}
@@ -57,10 +60,16 @@ const AssetItem = ({ asset }: AssetItemProps) => {
         className="text-center"
         style={{ width: ASSET_COLUMNS.TOTAL_BORROWED.width }}
       >
-        <p>{Number(totalBorrowed) / 10 ** 18 || "-"}</p>
-        <p className="text-xs text-secondary">
-          {Number(totalBorrowed) / 10 ** 18 || "-"}
-        </p>
+        {token.symbol === "USDC" || token.symbol === "USDT" ? (
+          <>
+            <p>{(Number(totalBorrowed) / 10 ** 18).toFixed(2) || "-"}</p>
+            <p className="text-xs text-secondary">
+              ${borrowUsdValue.toLocaleString()}
+            </p>{" "}
+          </>
+        ) : (
+          "-"
+        )}
       </div>
 
       {/* BORROW APY */}

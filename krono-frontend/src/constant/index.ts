@@ -5,7 +5,9 @@ export const PROJECT_ID =
   "YOUR RAINBOW KIT PROJECT ID";
 
 export const LENDING_POOL_ADDRESS =
-  "0xE7cca31DFB970fFBF436Deba7fbB8FD474930641";
+  "0x9295567A267f252a11387cc23809Cd0FC65DF260";
+export const PRICE_ORACLE_ADDRESS =
+  "0xa1b13cBdfC252CBE586295A1ca832C184d782bde";
 
 export const TEST_USDC = "0x47a347287D6178591208c6681fD4c7bffd9DA6fB";
 export const TEST_USDT = "0x2F2DD40B0111fe8659d1B7e36BaB815480075167";
@@ -20,23 +22,27 @@ export const ASSET_LIST: Record<AssetList, IToken> = {
     symbol: "USDC",
     address: TEST_USDC,
     image: "/tokens/usdc.png",
+    price: 1n * 10n ** 18n,
   },
   USDT: {
     name: "Tether USD",
     symbol: "USDT",
     address: TEST_USDT,
     image: "/tokens/usdt.png",
+    price: 1n * 10n ** 18n,
   },
   MANTA: {
     name: "Manta Network",
     symbol: "MANTA",
     address: TEST_MANTA,
     image: "/tokens/manta.png",
+    price: BigInt(Math.floor(0.42 * 10 ** 18)),
   },
   WBTC: {
     name: "Wrapped Bitcoin",
     symbol: "WBTC",
     address: TEST_WBTC,
     image: "/tokens/wbtc.png",
+    price: 95000n * 10n ** 18n,
   },
 };

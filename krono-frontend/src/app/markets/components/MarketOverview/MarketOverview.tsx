@@ -14,15 +14,21 @@ const MarketOverview = () => {
   const overviewData = [
     {
       title: "Total market size",
-      value: marketData.then((data) => Number(data.totalMarketSize) / 10 ** 18),
+      value: marketData.then((data) =>
+        (Number(data.totalMarketSize) / 10 ** 18).toLocaleString(),
+      ),
     },
     {
       title: "Total available",
-      value: marketData.then((data) => Number(data.totalAvailable) / 10 ** 18),
+      value: marketData.then((data) =>
+        (Number(data.totalAvailable) / 10 ** 18).toLocaleString(),
+      ),
     },
     {
       title: "Total borrows",
-      value: marketData.then((data) => Number(data.totalBorrows) / 10 ** 18),
+      value: marketData.then((data) =>
+        (Number(data.totalBorrows) / 10 ** 18).toLocaleString(),
+      ),
     },
   ];
 

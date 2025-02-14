@@ -53,7 +53,7 @@ const useLendBorrow = () => {
       USDC: {
         token: ASSET_LIST.USDC,
         totalSupplied: USDCData.totalSupply,
-        supplyApy: USDCData.supplyApy,
+        supplyApy: 6n,
         totalBorrowed: USDCData.totalBorrow,
         borrowApy: USDCData.borrowApy,
         action: {
@@ -68,7 +68,7 @@ const useLendBorrow = () => {
       USDT: {
         token: ASSET_LIST.USDT,
         totalSupplied: USDTData.totalSupply,
-        supplyApy: USDTData.supplyApy,
+        supplyApy: 6n,
         totalBorrowed: USDTData.totalBorrow,
         borrowApy: USDTData.borrowApy,
         action: {

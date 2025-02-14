@@ -2,18 +2,50 @@ import React from "react";
 
 import Image from "next/image";
 
+import { useAccount, useWalletClient } from "wagmi";
+
 import Button from "@/components/Button/Button";
 import NumberInput from "@/components/Input/NumberInput";
 import Modal from "@/components/Modal/Modal";
 import useNumberInput from "@/hooks/useNumberInput";
+import { borrow, publicClient } from "@/lib/services/lendingPoolService";
 import { quickAddPercentage } from "@/types";
 
 import useLendBorrow from "../../hooks/useLendBorrow";
 
 const BorrowModal = () => {
+  const { data: walletClient } = useWalletClient();
+  const { address: account } = useAccount();
+
   const { borrowAssetItem, borrowModal, closeBorrowModal } = useLendBorrow();
 
-  const { displayValue, handleInputBlur, handleInputChange } = useNumberInput();
+  const { displayValue, value, handleInputBlur, handleInputChange } =
+    useNumberInput();
+
+  const tokenAddress = borrowAssetItem.token.address;
+
+  const handleBorrow = async () => {
+    if (!walletClient || !account) return;
+
+    const amount = BigInt(value * 10 ** 18);
+
+    try {
+      const hash = await borrow(tokenAddress, amount, walletClient, account);
+      console.log(hash);
+
+      // Wait for the transaction receipt (using the public client if available)
+      const receipt = await publicClient.waitForTransactionReceipt({
+        hash,
+      });
+      console.log("Transaction receipt:", receipt);
+
+      if (receipt.status === "reverted") {
+        console.error("Transaction reverted.");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <Modal
@@ -64,10 +96,7 @@ const BorrowModal = () => {
           </div>
         </div>
 
-        <Button
-          className="mb-1 mt-4 w-full lg:!text-lg"
-          onClick={borrowAssetItem.action?.borrow}
-        >
+        <Button className="mb-1 mt-4 w-full lg:!text-lg" onClick={handleBorrow}>
           Borrow {borrowAssetItem.token.symbol}
         </Button>
       </div>

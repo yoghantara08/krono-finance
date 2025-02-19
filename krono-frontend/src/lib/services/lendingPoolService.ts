@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 import {
   Address,
   createPublicClient,
@@ -35,42 +36,45 @@ export async function getMarketData(token: string) {
 }
 
 export async function getAggregateMarketStats(tokens: string[]): Promise<{
-  totalMarketSize: bigint;
-  totalAvailable: bigint;
-  totalBorrows: bigint;
+  totalMarketSize: BigNumber;
+  totalAvailable: BigNumber;
+  totalBorrows: BigNumber;
 }> {
-  let totalMarketSize = 0n;
-  let totalAvailable = 0n;
-  let totalBorrows = 0n;
+  let totalMarketSize = new BigNumber("0");
+  let totalAvailable = new BigNumber("0");
+  let totalBorrows = new BigNumber("0");
 
   // Loop through each token and accumulate market data with price calculations
   for (const token of tokens) {
     const marketData = (await getMarketData(token)) as MarketData;
 
     // Get token price based on token address
-    let tokenPrice = 0n;
-    if (token === ASSET_LIST.MANTA.address) {
-      tokenPrice = ASSET_LIST.MANTA.price;
-    } else if (token === ASSET_LIST.USDC.address) {
-      tokenPrice = ASSET_LIST.USDC.price;
+    let tokenPrice = BigNumber("0");
+    if (token === ASSET_LIST.USDC.address) {
+      tokenPrice = BigNumber(ASSET_LIST.USDC.price);
     } else if (token === ASSET_LIST.USDT.address) {
-      tokenPrice = ASSET_LIST.USDT.price;
+      tokenPrice = BigNumber(ASSET_LIST.USDT.price);
     } else if (token === ASSET_LIST.WBTC.address) {
-      tokenPrice = ASSET_LIST.WBTC.price;
+      tokenPrice = BigNumber(ASSET_LIST.WBTC.price);
     }
 
     // Calculate USD value for total market size
-    const supplyInUsd = (marketData.totalSupply * tokenPrice) / BigInt(1e18);
-    totalMarketSize += supplyInUsd;
+    const supplyInUsd = BigNumber(marketData.totalSupply)
+      .div(10 ** 18)
+      .multipliedBy(tokenPrice);
+
+    totalMarketSize = BigNumber(totalMarketSize).plus(supplyInUsd);
 
     // Only calculate available and borrows for USDC and USDT
     if (
       token === ASSET_LIST.USDC.address ||
       token === ASSET_LIST.USDT.address
     ) {
-      const borrowInUsd = (marketData.totalBorrow * tokenPrice) / BigInt(1e18);
-      totalBorrows += borrowInUsd;
-      totalAvailable += supplyInUsd - borrowInUsd;
+      const borrowInUsd = BigNumber(marketData.totalBorrow)
+        .div(10 ** 18)
+        .multipliedBy(tokenPrice);
+      totalBorrows = totalBorrows.plus(borrowInUsd);
+      totalAvailable = supplyInUsd.minus(borrowInUsd);
     }
   }
 

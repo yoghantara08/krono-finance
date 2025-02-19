@@ -14,6 +14,7 @@
     "@reduxjs/toolkit": "^2.5.1",
     "@tanstack/react-query": "^5.66.0",
     "@vercel/analytics": "^1.5.0",
+    "bignumber.js": "^9.1.2",
     "classnames": "^2.5.1",
     "krono-frontend": "file:",
     "lucide-react": "^0.475.0",

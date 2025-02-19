@@ -2,6 +2,8 @@ import React from "react";
 
 import Image from "next/image";
 
+import BigNumber from "bignumber.js";
+
 import Button from "@/components/Button/Button";
 import { IAssetItem } from "@/types";
 
@@ -19,11 +21,18 @@ const AssetItem = ({ asset }: AssetItemProps) => {
 
   const { updateLendAssetItem, updateBorrowAssetItem } = useLendBorrow();
 
-  const usdValue =
-    (Math.floor(Number(totalSupplied)) / 10 ** 18) *
-    (Number(token.price) / 10 ** 18);
-  const borrowUsdValue =
-    (Number(totalBorrowed) / 10 ** 18) * (Number(token.price) / 10 ** 18);
+  const bnTotalSupplied = BigNumber(totalSupplied || "0").div(
+    BigNumber(10).pow(18),
+  );
+  const bnTotalBorrowed = BigNumber(totalBorrowed || "0").div(
+    BigNumber(10).pow(18),
+  );
+
+  const usdValue = bnTotalSupplied.times(token.price).toFixed(2).toString();
+  const borrowUsdValue = bnTotalBorrowed
+    .times(token.price)
+    .toFixed(2)
+    .toString();
 
   return (
     <div className="flex w-full items-center rounded-lg border bg-surface px-5 py-3">
@@ -44,8 +53,10 @@ const AssetItem = ({ asset }: AssetItemProps) => {
         className="text-center"
         style={{ width: ASSET_COLUMNS.TOTAL_SUPPLIED.width }}
       >
-        <p>{(Number(totalSupplied) / 10 ** 18).toFixed(2) || "-"}</p>
-        <p className="text-xs text-secondary">${usdValue.toLocaleString()}</p>
+        <p>{bnTotalSupplied.toFixed(2).toString()}</p>
+        <p className="text-xs text-secondary">
+          ${BigNumber(usdValue).toFormat()}
+        </p>
       </div>
 
       {/* SUPPLY APY */}
@@ -63,9 +74,9 @@ const AssetItem = ({ asset }: AssetItemProps) => {
       >
         {token.symbol === "USDC" || token.symbol === "USDT" ? (
           <>
-            <p>{(Number(totalBorrowed) / 10 ** 18).toFixed(2) || "-"}</p>
+            <p>{bnTotalBorrowed.toFixed(2).toString()}</p>
             <p className="text-xs text-secondary">
-              ${borrowUsdValue.toLocaleString()}
+              ${BigNumber(borrowUsdValue).toFormat()}
             </p>{" "}
           </>
         ) : (

@@ -1,34 +1,29 @@
 import React from "react";
 
-import { TEST_MANTA, TEST_USDC, TEST_USDT, TEST_WBTC } from "@/constant";
+import BigNumber from "bignumber.js";
+
+import { TEST_USDC, TEST_USDT, TEST_WBTC } from "@/constant";
 import { getAggregateMarketStats } from "@/lib/services/lendingPoolService";
 
 const MarketOverview = () => {
-  const marketData = getAggregateMarketStats([
-    TEST_USDC,
-    TEST_USDT,
-    TEST_WBTC,
-    TEST_MANTA,
-  ]);
+  const marketData = getAggregateMarketStats([TEST_USDC, TEST_USDT, TEST_WBTC]);
 
   const overviewData = [
     {
       title: "Total market size",
       value: marketData.then((data) =>
-        (Number(data.totalMarketSize) / 10 ** 18).toLocaleString(),
+        data.totalMarketSize.toFixed(2).toString(),
       ),
     },
     {
       title: "Total available",
       value: marketData.then((data) =>
-        (Number(data.totalAvailable) / 10 ** 18).toLocaleString(),
+        data.totalAvailable.toFixed(2).toString(),
       ),
     },
     {
       title: "Total borrows",
-      value: marketData.then((data) =>
-        (Number(data.totalBorrows) / 10 ** 18).toLocaleString(),
-      ),
+      value: marketData.then((data) => data.totalBorrows.toFixed(2).toString()),
     },
   ];
 
@@ -44,7 +39,7 @@ const MarketOverview = () => {
             <p className="text-xs text-secondary md:text-sm">{data.title}</p>
             <p className="font-medium md:text-2xl">
               <span className="text-secondary">$</span>
-              {data.value}
+              {data.value.then((data) => BigNumber(data).toFormat())}
             </p>
           </div>
         ))}

@@ -43,10 +43,9 @@ const useLendBorrow = () => {
     Record<AssetList, IAssetItem>
   > => {
     // Fetch market data for all tokens concurrently
-    const [USDCData, USDTData, MANTAData, WBTCData] = await Promise.all([
+    const [USDCData, USDTData, WBTCData] = await Promise.all([
       getTokenMarketData("USDC"),
       getTokenMarketData("USDT"),
-      getTokenMarketData("MANTA"),
       getTokenMarketData("WBTC"),
     ]);
 
@@ -54,7 +53,7 @@ const useLendBorrow = () => {
       USDC: {
         token: ASSET_LIST.USDC,
         totalSupplied: USDCData.totalSupply,
-        supplyApy: 6n,
+        supplyApy: "6",
         totalBorrowed: USDCData.totalBorrow,
         borrowApy: USDCData.borrowApy,
         action: {
@@ -65,7 +64,7 @@ const useLendBorrow = () => {
       USDT: {
         token: ASSET_LIST.USDT,
         totalSupplied: USDTData.totalSupply,
-        supplyApy: 6n,
+        supplyApy: "6",
         totalBorrowed: USDTData.totalBorrow,
         borrowApy: USDTData.borrowApy,
         action: {
@@ -73,16 +72,7 @@ const useLendBorrow = () => {
           borrow: () => openBorrowModal(),
         },
       },
-      MANTA: {
-        token: ASSET_LIST.MANTA,
-        totalSupplied: MANTAData.totalSupply,
-        supplyApy: MANTAData.supplyApy,
-        totalBorrowed: MANTAData.totalBorrow,
-        borrowApy: MANTAData.borrowApy,
-        action: {
-          supply: () => openSupplyModal(),
-        },
-      },
+
       WBTC: {
         token: ASSET_LIST.WBTC,
         totalSupplied: WBTCData.totalSupply,
@@ -96,7 +86,7 @@ const useLendBorrow = () => {
     };
 
     return AVAILABLE_ASSETS;
-  }, [openBorrowModal, openSupplyModal]);
+  }, []);
 
   return {
     fetchAvailableAssets,

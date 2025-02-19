@@ -5,15 +5,15 @@ export interface IToken {
   symbol: string;
   address: Address;
   image: string;
-  price: bigint;
+  price: string;
 }
 
 export interface IAssetItem {
   token: IToken;
-  totalSupplied?: bigint;
-  supplyApy?: bigint;
-  totalBorrowed?: bigint;
-  borrowApy?: bigint;
+  totalSupplied?: string;
+  supplyApy?: string;
+  totalBorrowed?: string;
+  borrowApy?: string;
   action?: {
     supply?: () => void;
     borrow?: () => void;
@@ -38,8 +38,8 @@ export type quickAddPercentageType = 25 | 50 | 75 | 100;
 export const quickAddPercentage: quickAddPercentageType[] = [25, 50, 75, 100];
 
 export type MarketData = {
-  totalSupply: bigint;
-  totalBorrow: bigint;
-  supplyApy: bigint;
-  borrowApy: bigint;
+  totalSupply: string;
+  totalBorrow: string;
+  supplyApy: string;
+  borrowApy: string;
 };

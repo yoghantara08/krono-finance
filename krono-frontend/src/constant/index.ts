@@ -16,7 +16,7 @@ export const TEST_USDT = "0x2F2DD40B0111fe8659d1B7e36BaB815480075167";
 export const TEST_WBTC = "0xAc69Dc846063E0C0cefec2036a84FeF9A4a7061a";
 export const TEST_MANTA = "0x77f0bd951088fE4b8Cd756F1a0E0fc904C5eC981";
 
-export type AssetList = "USDC" | "USDT" | "WBTC" | "MANTA";
+export type AssetList = "USDC" | "USDT" | "WBTC";
 
 export const ASSET_LIST: Record<AssetList, IToken> = {
   USDC: {
@@ -24,27 +24,27 @@ export const ASSET_LIST: Record<AssetList, IToken> = {
     symbol: "USDC",
     address: TEST_USDC,
     image: "/tokens/usdc.png",
-    price: 1n * 10n ** 18n,
+    price: "1",
   },
   USDT: {
     name: "Tether USD",
     symbol: "USDT",
     address: TEST_USDT,
     image: "/tokens/usdt.png",
-    price: 1n * 10n ** 18n,
+    price: "1",
   },
-  MANTA: {
-    name: "Manta Network",
-    symbol: "MANTA",
-    address: TEST_MANTA,
-    image: "/tokens/manta.png",
-    price: BigInt(Math.floor(0.42 * 10 ** 18)),
-  },
+  // MANTA: {
+  //   name: "Manta Network",
+  //   symbol: "MANTA",
+  //   address: TEST_MANTA,
+  //   image: "/tokens/manta.png",
+  //   price: BigInt(Math.floor(0.42 * 10 ** 18)),
+  // },
   WBTC: {
     name: "Wrapped Bitcoin",
     symbol: "WBTC",
     address: TEST_WBTC,
     image: "/tokens/wbtc.png",
-    price: 95000n * 10n ** 18n,
+    price: "95000",
   },
 };

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import BigNumber from "bignumber.js";
 import { Address } from "viem";
 import { mantaSepoliaTestnet } from "viem/chains";
 import { useWalletClient } from "wagmi";
@@ -62,6 +63,11 @@ const useSupply = (user?: Address) => {
     fetchBalances();
   }, [user]);
 
+  const totalBalance = BigNumber(balances.TEST_USDC)
+    .plus(balances.TEST_USDT)
+    .plus(BigNumber(balances.TEST_WBTC).times("95000"))
+    .toString();
+
   const withdraw = async (token: Address, amount: bigint, account: Address) => {
     if (!data || !account) return;
 
@@ -84,7 +90,7 @@ const useSupply = (user?: Address) => {
     }
   };
 
-  return { balances, withdraw };
+  return { balances, totalBalance, withdraw };
 };
 
 export default useSupply;

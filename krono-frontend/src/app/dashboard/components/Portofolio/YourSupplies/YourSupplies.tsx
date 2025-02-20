@@ -26,12 +26,7 @@ const YourSupplies = () => {
   const { openWithdrawModal, updateWithdrawAssetItem } = useDashboard();
   const { address } = useAccount();
 
-  const { balances } = useSupply(address);
-
-  // const totalBalance = Object.values(balances).reduce(
-  //   (acc, balance) => acc + Number(balance),
-  //   0,
-  // );
+  const { balances, totalBalance } = useSupply(address);
 
   return (
     <div className="h-fit w-full rounded-md border bg-surface">
@@ -42,7 +37,7 @@ const YourSupplies = () => {
           <div className="rounded-md border px-2 py-1">
             Balance $
             <span className="font-medium text-white">
-              {/* {formatCurrency(BigInt(totalBalance / 10 ** 18))} */}0
+              {formatCurrency(totalBalance)}
             </span>
           </div>
           <div className="rounded-md border px-2 py-1">

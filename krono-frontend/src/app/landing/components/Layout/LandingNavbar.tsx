@@ -28,10 +28,10 @@ const LandingNavbar = () => {
       </Link>
 
       <Link href={"/markets"}>
-        <Button className="" variant="secondary">
+        <Button className="h-11" variant="secondary">
           <div className="flex items-center gap-1">
             <span>Launch App</span>
-            <MoveRightIcon className="mt-0.5 size-4 md:size-5" />
+            <MoveRightIcon className="mt-0.5 size-4 md:size-4" />
           </div>
         </Button>
       </Link>

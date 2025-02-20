@@ -1,26 +1,16 @@
 import BigNumber from "bignumber.js";
-import {
-  Address,
-  createPublicClient,
-  http,
-  PublicClient,
-  WalletClient,
-} from "viem";
-import { mantaSepoliaTestnet } from "viem/chains";
+import { Address, createPublicClient, http, WalletClient } from "viem";
+import { lisk } from "viem/chains";
+import { publicActionsL2 } from "viem/op-stack";
 
-import {
-  ASSET_LIST,
-  LENDING_POOL_ADDRESS,
-  PRICE_ORACLE_ADDRESS,
-} from "@/constant";
+import { ASSET_LIST, LENDING_POOL_ADDRESS } from "@/constant";
 import LENDING_POOL_ABI from "@/lib/abi/LendingPoolABI.json";
-import PRICE_ORACLE_ABI from "@/lib/abi/PriceOracleABI.json";
 import { MarketData } from "@/types";
 
-export const publicClient: PublicClient = createPublicClient({
-  chain: mantaSepoliaTestnet,
-  transport: http("https://pacific-rpc.sepolia-testnet.manta.network/http"),
-});
+export const publicClient = createPublicClient({
+  chain: lisk,
+  transport: http(),
+}).extend(publicActionsL2());
 
 // Function to get market data for a given token address
 export async function getMarketData(token: string) {
@@ -94,7 +84,7 @@ export async function supply(
 ) {
   const hash = await walletClient.writeContract({
     account,
-    chain: mantaSepoliaTestnet,
+    chain: lisk,
     address: LENDING_POOL_ADDRESS,
     abi: LENDING_POOL_ABI,
     functionName: "supply",
@@ -112,7 +102,7 @@ export async function supplyCollateral(
 ) {
   const hash = await walletClient.writeContract({
     account,
-    chain: mantaSepoliaTestnet,
+    chain: lisk,
     address: LENDING_POOL_ADDRESS,
     abi: LENDING_POOL_ABI,
     functionName: "supplyCollateral",
@@ -130,37 +120,11 @@ export async function borrow(
 ) {
   const hash = await walletClient.writeContract({
     account,
-    chain: mantaSepoliaTestnet,
+    chain: lisk,
     address: LENDING_POOL_ADDRESS,
     abi: LENDING_POOL_ABI,
     functionName: "borrow",
     args: [token, amount],
   });
   return hash;
-}
-
-export async function getTokenPrice(token: Address) {
-  const price = await publicClient.readContract({
-    address: PRICE_ORACLE_ADDRESS,
-    abi: PRICE_ORACLE_ABI,
-    functionName: "getTokenPrice",
-    args: [token],
-  });
-  return price;
-}
-
-export async function setTokenPrice(
-  token: Address,
-  price: bigint,
-  walletClient: WalletClient,
-  account: Address,
-) {
-  await walletClient.writeContract({
-    account,
-    chain: mantaSepoliaTestnet,
-    address: PRICE_ORACLE_ADDRESS,
-    abi: PRICE_ORACLE_ABI,
-    functionName: "setTokenPrice",
-    args: [token, price],
-  });
 }

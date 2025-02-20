@@ -16,21 +16,6 @@
         "name": "_wbtc",
         "type": "address",
         "internalType": "address"
-      },
-      {
-        "name": "_manta",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "_priceOracle",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "_config",
-        "type": "address",
-        "internalType": "address"
       }
     ],
     "stateMutability": "nonpayable"
@@ -55,13 +40,13 @@
   },
   {
     "type": "function",
-    "name": "config",
+    "name": "borrowRate",
     "inputs": [],
     "outputs": [
       {
         "name": "",
-        "type": "address",
-        "internalType": "contract LendingConfig"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"
@@ -157,25 +142,6 @@
   },
   {
     "type": "function",
-    "name": "getUserNetWorth",
-    "inputs": [
-      {
-        "name": "user",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "getUserSupplyShares",
     "inputs": [
       {
@@ -200,13 +166,26 @@
   },
   {
     "type": "function",
-    "name": "manta",
+    "name": "liquidationBonus",
     "inputs": [],
     "outputs": [
       {
         "name": "",
-        "type": "address",
-        "internalType": "address"
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "liquidationThreshold",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"
@@ -226,13 +205,13 @@
   },
   {
     "type": "function",
-    "name": "priceOracle",
+    "name": "platformFee",
     "inputs": [],
     "outputs": [
       {
         "name": "",
-        "type": "address",
-        "internalType": "contract PriceOracle"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"

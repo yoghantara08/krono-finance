@@ -1,19 +1,10 @@
-import {
-  Address,
-  createPublicClient,
-  http,
-  PublicClient,
-  WalletClient,
-} from "viem";
-import { mantaSepoliaTestnet } from "viem/chains";
+import { Address, WalletClient } from "viem";
+import { lisk } from "viem/chains";
 
 import { LENDING_POOL_ADDRESS } from "@/constant";
 import LENDING_POOL_ABI from "@/lib/abi/LendingPoolABI.json";
 
-export const publicClient: PublicClient = createPublicClient({
-  chain: mantaSepoliaTestnet,
-  transport: http("https://pacific-rpc.sepolia-testnet.manta.network/http"),
-});
+import { publicClient } from "./lendingPoolService";
 
 // Get user net worth
 export async function getUserNetWorth(user: Address) {
@@ -68,7 +59,7 @@ export async function withdraw(
 ) {
   const hash = await walletClient.writeContract({
     account,
-    chain: mantaSepoliaTestnet,
+    chain: lisk,
     address: LENDING_POOL_ADDRESS,
     abi: LENDING_POOL_ABI,
     functionName: "withdraw",
@@ -86,7 +77,7 @@ export async function withdrawCollateral(
 ) {
   const hash = await walletClient.writeContract({
     account,
-    chain: mantaSepoliaTestnet,
+    chain: lisk,
     address: LENDING_POOL_ADDRESS,
     abi: LENDING_POOL_ABI,
     functionName: "withdrawCollateral",
@@ -104,7 +95,7 @@ export async function repay(
 ) {
   const hash = await walletClient.writeContract({
     account,
-    chain: mantaSepoliaTestnet,
+    chain: lisk,
     address: LENDING_POOL_ADDRESS,
     abi: LENDING_POOL_ABI,
     functionName: "repay",

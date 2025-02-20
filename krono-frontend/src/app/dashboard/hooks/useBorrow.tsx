@@ -5,7 +5,7 @@ import { Address } from "viem";
 
 import { LENDING_POOL_ADDRESS, TEST_USDC, TEST_USDT } from "@/constant";
 import LENDING_POOL_ABI from "@/lib/abi/LendingPoolABI.json";
-import { publicClient } from "@/lib/services/dashboardService";
+import { publicClient } from "@/lib/services/lendingPoolService";
 
 const useBorrow = (user?: Address) => {
   const [debts, setDebts] = useState({
@@ -59,7 +59,7 @@ const useBorrow = (user?: Address) => {
   //       : "withdrawCollateral";
   //     const hash = await data.writeContract({
   //       account,
-  //       chain: mantaSepoliaTestnet,
+  //       chain: lisk,
   //       address: LENDING_POOL_ADDRESS,
   //       abi: LENDING_POOL_ABI,
   //       functionName,

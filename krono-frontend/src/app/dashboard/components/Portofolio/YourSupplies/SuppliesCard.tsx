@@ -28,12 +28,7 @@ const SuppliesCard = ({ asset }: SuppliesItemProps) => {
         <div className="text-end">
           <p>{balance ?? "-"}</p>
           <p className="text-xs text-secondary">
-            $
-            {balance
-              ? formatCurrency(
-                  BigInt(balance) * (asset.token.price / 10n ** 18n),
-                )
-              : formatCurrency(0n)}
+            ${balance ? formatCurrency(balance) : formatCurrency("0")}
           </p>
         </div>
       </div>

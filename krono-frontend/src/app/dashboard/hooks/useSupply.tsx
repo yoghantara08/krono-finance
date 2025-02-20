@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import BigNumber from "bignumber.js";
 import { Address } from "viem";
-import { mantaSepoliaTestnet } from "viem/chains";
+import { lisk } from "viem/chains";
 import { useWalletClient } from "wagmi";
 
 import {
@@ -12,7 +12,7 @@ import {
   TEST_WBTC,
 } from "@/constant";
 import LENDING_POOL_ABI from "@/lib/abi/LendingPoolABI.json";
-import { publicClient } from "@/lib/services/dashboardService";
+import { publicClient } from "@/lib/services/lendingPoolService";
 
 const useSupply = (user?: Address) => {
   const { data } = useWalletClient();
@@ -77,7 +77,7 @@ const useSupply = (user?: Address) => {
         : "withdrawCollateral";
       const hash = await data.writeContract({
         account,
-        chain: mantaSepoliaTestnet,
+        chain: lisk,
         address: LENDING_POOL_ADDRESS,
         abi: LENDING_POOL_ABI,
         functionName,

@@ -1,32 +1,32 @@
-"use client";
-import React from "react";
+// "use client";
+// import React from "react";
 
-import { useAccount, useWalletClient } from "wagmi";
+// import { useAccount, useWalletClient } from "wagmi";
 
-import { TEST_WBTC } from "@/constant";
-import { setTokenPrice } from "@/lib/services/lendingPoolService";
+// import { TEST_WBTC } from "@/constant";
+// import { setTokenPrice } from "@/lib/services/lendingPoolService";
 
-const SetToken = () => {
-  const { address } = useAccount();
-  const { data } = useWalletClient();
+// const SetToken = () => {
+//   const { address } = useAccount();
+//   const { data } = useWalletClient();
 
-  const changeTokenPrice = async () => {
-    if (!data || !address) return;
+//   const changeTokenPrice = async () => {
+//     if (!data || !address) return;
 
-    try {
-      const hash = await setTokenPrice(
-        TEST_WBTC,
-        95000n * 10n ** 18n,
-        data,
-        address,
-      );
-      console.log(hash);
-    } catch (error) {
-      console.error("Failed to set token:", error);
-    }
-  };
+//     try {
+//       const hash = await setTokenPrice(
+//         TEST_WBTC,
+//         95000n * 10n ** 18n,
+//         data,
+//         address,
+//       );
+//       console.log(hash);
+//     } catch (error) {
+//       console.error("Failed to set token:", error);
+//     }
+//   };
 
-  return <div onClick={changeTokenPrice}>SetToken</div>;
-};
+//   return <div onClick={changeTokenPrice}>SetToken</div>;
+// };
 
-export default SetToken;
+// export default SetToken;

@@ -37,7 +37,9 @@ export function DashboardOverview() {
     .minus(debtUsdc.multipliedBy(borrowAPY))
     .minus(debtUsdt.multipliedBy(borrowAPY));
 
-  const netApyDecimal = totalAPYContribution.dividedBy(totalValue);
+  const netApyDecimal = totalValue.isZero()
+    ? new BigNumber(0)
+    : totalAPYContribution.dividedBy(totalValue);
 
   const netApyPercentage = netApyDecimal
     .multipliedBy(100)

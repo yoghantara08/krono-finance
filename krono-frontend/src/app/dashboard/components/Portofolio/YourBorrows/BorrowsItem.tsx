@@ -3,6 +3,7 @@ import React from "react";
 import Image from "next/image";
 
 import Button from "@/components/Button/Button";
+import { formatCurrency } from "@/lib/utils";
 import { IYourBorrowsItem } from "@/types";
 
 import { YOUR_BORROWS_COLUMNS } from "./YourBorrows";
@@ -13,9 +14,6 @@ interface BorrowsItemProps {
 
 const BorrowsItem = ({ asset }: BorrowsItemProps) => {
   const { token, debt, apy, repay } = asset;
-
-  const formatCurrency = (value?: number) =>
-    value ? `$${value.toLocaleString()}` : "-";
 
   return (
     <div className="flex w-full items-center p-4">
@@ -37,7 +35,7 @@ const BorrowsItem = ({ asset }: BorrowsItemProps) => {
         style={{ width: YOUR_BORROWS_COLUMNS.DEBT.width }}
       >
         <p>{debt ?? "-"}</p>
-        <p className="text-xs text-secondary">{formatCurrency(debt)}</p>
+        <p className="text-xs text-secondary">{formatCurrency(debt || "0")}</p>
       </div>
 
       {/* SUPPLY APY */}

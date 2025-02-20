@@ -35,16 +35,17 @@ contract LendingPool is Ownable, ReentrancyGuard {
         uint256 lastAccrued;
     }
 
+    mapping(address => UserAccount) private userAccounts;
+    mapping(address => TokenState) public tokenStates;
+
     address public immutable usdc;
     address public immutable usdt;
     address public immutable wbtc;
-    address public immutable manta;
 
-    PriceOracle public immutable priceOracle;
-    LendingConfig public immutable config;
-
-    mapping(address => UserAccount) private userAccounts;
-    mapping(address => TokenState) public tokenStates;
+    uint256 public borrowRate = 5;
+    uint256 public liquidationThreshold = 75;
+    uint256 public liquidationBonus = 5;
+    uint256 public platformFee = 10;
 
     event Supply(
         address indexed user,
@@ -86,17 +87,11 @@ contract LendingPool is Ownable, ReentrancyGuard {
     constructor(
         address _usdc,
         address _usdt,
-        address _wbtc,
-        address _manta,
-        address _priceOracle,
-        address _config
+        address _wbtc
     ) Ownable(msg.sender) {
         usdc = _usdc;
         usdt = _usdt;
         wbtc = _wbtc;
-        manta = _manta;
-        priceOracle = PriceOracle(_priceOracle);
-        config = LendingConfig(_config);
         tokenStates[usdc].lastAccrued = block.timestamp;
         tokenStates[usdt].lastAccrued = block.timestamp;
     }
@@ -198,7 +193,7 @@ contract LendingPool is Ownable, ReentrancyGuard {
         address token,
         uint256 amount
     ) external nonReentrant {
-        if (token != wbtc && token != manta) revert InvalidToken();
+        if (token != wbtc) revert InvalidToken();
         if (amount == 0) revert InvalidAmount();
 
         if (!IERC20(token).transferFrom(msg.sender, address(this), amount))
@@ -215,7 +210,7 @@ contract LendingPool is Ownable, ReentrancyGuard {
         uint256 amount
     ) external nonReentrant {
         UserAccount storage account = userAccounts[msg.sender];
-        if (token != wbtc && token != manta) revert InvalidToken();
+        if (token != wbtc) revert InvalidToken();
         if (amount > account.collateral[token]) revert InsufficientCollateral();
 
         account.collateral[token] -= amount;
@@ -233,14 +228,14 @@ contract LendingPool is Ownable, ReentrancyGuard {
         if (elapsedTime > 0 && state.totalBorrowAssets > 0) {
             uint256 utilizationRate = (state.totalBorrowAssets * 100) /
                 state.totalSupplyAssets;
-            uint256 borrowRate = config.borrowRate();
+
             uint256 interestPerYear = (state.totalBorrowAssets *
                 borrowRate *
                 utilizationRate) / 10000;
             uint256 interest = (interestPerYear * elapsedTime) / 365 days;
 
-            uint256 platformFee = (interest * config.platformFee()) / 100;
-            uint256 supplierInterest = interest - platformFee;
+            uint256 _platformFee = (interest * platformFee) / 100;
+            uint256 supplierInterest = interest - _platformFee;
 
             state.totalBorrowAssets += interest;
             state.totalSupplyAssets += supplierInterest;
@@ -256,49 +251,9 @@ contract LendingPool is Ownable, ReentrancyGuard {
 
         uint256 utilization = (state.totalBorrowAssets * 100) /
             state.totalSupplyAssets;
-        uint256 borrowRate = config.borrowRate();
-        uint256 platformFee = config.platformFee();
 
         // APY is affected by utilization rate
         return (borrowRate * utilization * (100 - platformFee)) / 10000;
-    }
-
-    function getUserNetWorth(address user) external view returns (uint256) {
-        UserAccount storage account = userAccounts[user];
-        uint256 totalValue = 0;
-
-        // Calculate USDC supplies and borrows
-        TokenState storage usdcState = tokenStates[usdc];
-        if (usdcState.totalSupplyShares > 0) {
-            totalValue +=
-                (account.supplyShares[usdc] * usdcState.totalSupplyAssets) /
-                usdcState.totalSupplyShares;
-        }
-        if (usdcState.totalBorrowShares > 0) {
-            totalValue -=
-                (account.borrowShares[usdc] * usdcState.totalBorrowAssets) /
-                usdcState.totalBorrowShares;
-        }
-
-        // Calculate USDT supplies and borrows
-        TokenState storage usdtState = tokenStates[usdt];
-        if (usdtState.totalSupplyShares > 0) {
-            totalValue +=
-                (account.supplyShares[usdt] * usdtState.totalSupplyAssets) /
-                usdtState.totalSupplyShares;
-        }
-        if (usdtState.totalBorrowShares > 0) {
-            totalValue -=
-                (account.borrowShares[usdt] * usdtState.totalBorrowAssets) /
-                usdtState.totalBorrowShares;
-        }
-
-        // Calculate collateral value
-        totalValue +=
-            (account.collateral[wbtc] * priceOracle.getTokenPrice(wbtc)) +
-            (account.collateral[manta] * priceOracle.getTokenPrice(manta));
-
-        return totalValue;
     }
 
     function getMarketData(
@@ -309,9 +264,7 @@ contract LendingPool is Ownable, ReentrancyGuard {
         uint256 _supplyApy = (token == usdc || token == usdt)
             ? _getSupplyApy(token)
             : 0;
-        uint256 _borrowApy = (token == usdc || token == usdt)
-            ? config.borrowRate()
-            : 0;
+        uint256 _borrowApy = (token == usdc || token == usdt) ? borrowRate : 0;
 
         return
             MarketData({

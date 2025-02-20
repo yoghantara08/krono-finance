@@ -2,14 +2,16 @@
 import React from "react";
 
 import classNames from "classnames";
+import { useAccount } from "wagmi";
 
+import useBorrow from "@/app/dashboard/hooks/useBorrow";
 import useDashboard from "@/app/dashboard/hooks/useDashboard";
 import { ASSET_LIST } from "@/constant";
 import useWindowSize from "@/hooks/useWindowSize";
+import { formatCurrency } from "@/lib/utils";
 
 import RepayModal from "../../ActionModal/RepayModal";
 
-import BorrowsCard from "./BorrowsCard";
 import BorrowsItem from "./BorrowsItem";
 
 export const YOUR_BORROWS_COLUMNS = {
@@ -22,6 +24,9 @@ export const YOUR_BORROWS_COLUMNS = {
 const YourBorrows = () => {
   const { isMobile } = useWindowSize();
   const { openRepayModal, updateRepayAssetItem } = useDashboard();
+  const { address } = useAccount();
+
+  const { debts, totalDebt } = useBorrow(address);
 
   return (
     <div className="h-fit w-full rounded-md border bg-surface">
@@ -30,7 +35,10 @@ const YourBorrows = () => {
 
         <div className="flex items-center gap-3 text-sm text-secondary">
           <div className="rounded-md border px-2 py-1">
-            Debt $<span className="font-medium text-white">100</span>
+            Debt $
+            <span className="font-medium text-white">
+              {formatCurrency(totalDebt)}
+            </span>
           </div>
           <div className="rounded-md border px-2 py-1">
             APY <span className="font-medium text-white">5</span>%
@@ -53,7 +61,8 @@ const YourBorrows = () => {
       </div>
 
       {isMobile ? (
-        <BorrowsCard
+        <>
+          {/* <BorrowsCard
           asset={{
             token: ASSET_LIST.USDC,
             debt: 100,
@@ -67,23 +76,41 @@ const YourBorrows = () => {
               });
             },
           }}
-        />
+        /> */}
+        </>
       ) : (
-        <BorrowsItem
-          asset={{
-            token: ASSET_LIST.USDC,
-            debt: 100,
-            apy: 5,
-            repay: () => {
-              openRepayModal();
-              updateRepayAssetItem({
-                token: ASSET_LIST.USDC,
-                debt: 100,
-                apy: 5,
-              });
-            },
-          }}
-        />
+        <>
+          <BorrowsItem
+            asset={{
+              token: ASSET_LIST.USDC,
+              debt: formatCurrency(debts.TEST_USDC),
+              apy: "5",
+              repay: () => {
+                openRepayModal();
+                updateRepayAssetItem({
+                  token: ASSET_LIST.USDC,
+                  debt: formatCurrency(debts.TEST_USDC),
+                  apy: "5",
+                });
+              },
+            }}
+          />
+          <BorrowsItem
+            asset={{
+              token: ASSET_LIST.USDT,
+              debt: formatCurrency(debts.TEST_USDT),
+              apy: "5",
+              repay: () => {
+                openRepayModal();
+                updateRepayAssetItem({
+                  token: ASSET_LIST.USDT,
+                  debt: formatCurrency(debts.TEST_USDT),
+                  apy: "5",
+                });
+              },
+            }}
+          />
+        </>
       )}
 
       <RepayModal />

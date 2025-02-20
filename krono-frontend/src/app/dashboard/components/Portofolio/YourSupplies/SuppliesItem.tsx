@@ -2,8 +2,9 @@ import React from "react";
 
 import Image from "next/image";
 
+import BigNumber from "bignumber.js";
+
 import Button from "@/components/Button/Button";
-import { formatCurrency } from "@/lib/utils";
 import { IYourSuppliesItem } from "@/types";
 
 import { YOUR_SUPPLIES_COLUMNS } from "./YourSupplies";
@@ -37,9 +38,11 @@ const SuppliesItem = ({ asset }: SuppliesItemProps) => {
         <p>{balance ?? "-"}</p>
         <p className="text-xs text-secondary">
           $
-          {balance
-            ? formatCurrency(BigInt(balance) * (asset.token.price / 10n ** 18n))
-            : formatCurrency(0n)}
+          {token.symbol === "WBTC"
+            ? BigNumber(balance || "0")
+                .times("95000")
+                .toFormat()
+            : balance}
         </p>
       </div>
 

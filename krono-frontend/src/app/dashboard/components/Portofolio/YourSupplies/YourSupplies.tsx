@@ -12,7 +12,6 @@ import { formatCurrency } from "@/lib/utils";
 
 import WithdrawModal from "../../ActionModal/WithdrawModal";
 
-import SuppliesCard from "./SuppliesCard";
 import SuppliesItem from "./SuppliesItem";
 
 export const YOUR_SUPPLIES_COLUMNS = {
@@ -29,10 +28,10 @@ const YourSupplies = () => {
 
   const { balances } = useSupply(address);
 
-  const totalBalance = Object.values(balances).reduce(
-    (acc, balance) => acc + Number(balance),
-    0,
-  );
+  // const totalBalance = Object.values(balances).reduce(
+  //   (acc, balance) => acc + Number(balance),
+  //   0,
+  // );
 
   return (
     <div className="h-fit w-full rounded-md border bg-surface">
@@ -43,7 +42,7 @@ const YourSupplies = () => {
           <div className="rounded-md border px-2 py-1">
             Balance $
             <span className="font-medium text-white">
-              {formatCurrency(BigInt(totalBalance / 10 ** 18))}
+              {/* {formatCurrency(BigInt(totalBalance / 10 ** 18))} */}0
             </span>
           </div>
           <div className="rounded-md border px-2 py-1">
@@ -72,7 +71,7 @@ const YourSupplies = () => {
 
       {isMobile ? (
         <>
-          <SuppliesCard
+          {/* <SuppliesCard
             asset={{
               token: ASSET_LIST.USDC,
               balance: Number(balances.TEST_USDC / 10n ** 18n),
@@ -104,21 +103,6 @@ const YourSupplies = () => {
           />
           <SuppliesCard
             asset={{
-              token: ASSET_LIST.MANTA,
-              balance: Number(balances.TEST_MANTA / 10n ** 18n),
-              withdraw: () => {
-                openWithdrawModal();
-                updateWithdrawAssetItem({
-                  token: ASSET_LIST.MANTA,
-                  balance: Number(balances.TEST_MANTA / 10n ** 18n),
-                  apy: 6,
-                });
-              },
-              apy: 0,
-            }}
-          />
-          <SuppliesCard
-            asset={{
               token: ASSET_LIST.WBTC,
               balance: Number(balances.TEST_WBTC / 10n ** 18n),
               withdraw: () => {
@@ -131,68 +115,54 @@ const YourSupplies = () => {
               },
               apy: 0,
             }}
-          />
+          /> */}
         </>
       ) : (
         <>
           <SuppliesItem
             asset={{
               token: ASSET_LIST.USDC,
-              balance: Number(balances.TEST_USDC / 10n ** 18n),
+              balance: formatCurrency(balances.TEST_USDC),
               withdraw: () => {
                 openWithdrawModal();
                 updateWithdrawAssetItem({
                   token: ASSET_LIST.USDC,
-                  balance: Number(balances.TEST_USDC / 10n ** 18n),
-                  apy: 6,
+                  balance: formatCurrency(balances.TEST_USDC),
+                  apy: "6",
                 });
               },
-              apy: 6,
+              apy: "6",
             }}
           />
           <SuppliesItem
             asset={{
               token: ASSET_LIST.USDT,
-              balance: Number(balances.TEST_USDT / 10n ** 18n),
+              balance: formatCurrency(balances.TEST_USDT),
               withdraw: () => {
                 openWithdrawModal();
                 updateWithdrawAssetItem({
                   token: ASSET_LIST.USDT,
-                  balance: Number(balances.TEST_USDT / 10n ** 18n),
-                  apy: 6,
+                  balance: formatCurrency(balances.TEST_USDT),
+                  apy: "6",
                 });
               },
-              apy: 6,
+              apy: "6",
             }}
           />
-          <SuppliesItem
-            asset={{
-              token: ASSET_LIST.MANTA,
-              balance: Number(balances.TEST_MANTA / 10n ** 18n),
-              withdraw: () => {
-                openWithdrawModal();
-                updateWithdrawAssetItem({
-                  token: ASSET_LIST.MANTA,
-                  balance: Number(balances.TEST_MANTA / 10n ** 18n),
-                  apy: 6,
-                });
-              },
-              apy: 0,
-            }}
-          />
+
           <SuppliesItem
             asset={{
               token: ASSET_LIST.WBTC,
-              balance: Number(balances.TEST_WBTC / 10n ** 18n),
+              balance: formatCurrency(balances.TEST_WBTC),
               withdraw: () => {
                 openWithdrawModal();
                 updateWithdrawAssetItem({
                   token: ASSET_LIST.WBTC,
-                  balance: Number(balances.TEST_WBTC / 10n ** 18n),
-                  apy: 6,
+                  balance: formatCurrency(balances.TEST_WBTC),
+                  apy: "0",
                 });
               },
-              apy: 0,
+              apy: "0",
             }}
           />
         </>

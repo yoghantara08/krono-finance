@@ -22,15 +22,15 @@ export interface IAssetItem {
 
 export interface IYourSuppliesItem {
   token: IToken;
-  balance?: number;
-  apy?: number;
+  balance?: string;
+  apy?: string;
   withdraw?: () => void;
 }
 
 export interface IYourBorrowsItem {
   token: IToken;
-  debt?: number;
-  apy?: number;
+  debt?: string;
+  apy?: string;
   repay?: () => void;
 }
 

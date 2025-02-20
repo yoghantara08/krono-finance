@@ -6,7 +6,6 @@ import { useWalletClient } from "wagmi";
 
 import {
   LENDING_POOL_ADDRESS,
-  TEST_MANTA,
   TEST_USDC,
   TEST_USDT,
   TEST_WBTC,
@@ -18,10 +17,9 @@ const useSupply = (user?: Address) => {
   const { data } = useWalletClient();
 
   const [balances, setBalances] = useState({
-    TEST_USDC: 0n,
-    TEST_USDT: 0n,
-    TEST_MANTA: 0n,
-    TEST_WBTC: 0n,
+    TEST_USDC: "0",
+    TEST_USDT: "0",
+    TEST_WBTC: "0",
   });
 
   useEffect(() => {
@@ -29,39 +27,32 @@ const useSupply = (user?: Address) => {
 
     const fetchBalances = async () => {
       try {
-        const [usdcShares, usdtShares, mantaCollateral, wbtcCollateral] =
-          await Promise.all([
-            publicClient.readContract({
-              address: LENDING_POOL_ADDRESS,
-              abi: LENDING_POOL_ABI,
-              functionName: "getUserSupplyShares",
-              args: [user, TEST_USDC],
-            }),
-            publicClient.readContract({
-              address: LENDING_POOL_ADDRESS,
-              abi: LENDING_POOL_ABI,
-              functionName: "getUserSupplyShares",
-              args: [user, TEST_USDT],
-            }),
-            publicClient.readContract({
-              address: LENDING_POOL_ADDRESS,
-              abi: LENDING_POOL_ABI,
-              functionName: "getUserCollateral",
-              args: [user, TEST_MANTA],
-            }),
-            publicClient.readContract({
-              address: LENDING_POOL_ADDRESS,
-              abi: LENDING_POOL_ABI,
-              functionName: "getUserCollateral",
-              args: [user, TEST_WBTC],
-            }),
-          ]);
+        const [usdcShares, usdtShares, wbtcCollateral] = await Promise.all([
+          publicClient.readContract({
+            address: LENDING_POOL_ADDRESS,
+            abi: LENDING_POOL_ABI,
+            functionName: "getUserSupplyShares",
+            args: [user, TEST_USDC],
+          }),
+          publicClient.readContract({
+            address: LENDING_POOL_ADDRESS,
+            abi: LENDING_POOL_ABI,
+            functionName: "getUserSupplyShares",
+            args: [user, TEST_USDT],
+          }),
+
+          publicClient.readContract({
+            address: LENDING_POOL_ADDRESS,
+            abi: LENDING_POOL_ABI,
+            functionName: "getUserCollateral",
+            args: [user, TEST_WBTC],
+          }),
+        ]);
 
         setBalances({
-          TEST_USDC: usdcShares as bigint,
-          TEST_USDT: usdtShares as bigint,
-          TEST_MANTA: mantaCollateral as bigint,
-          TEST_WBTC: wbtcCollateral as bigint,
+          TEST_USDC: usdcShares as "string",
+          TEST_USDT: usdtShares as "string",
+          TEST_WBTC: wbtcCollateral as "string",
         });
       } catch (error) {
         console.error("Error fetching balances:", error);

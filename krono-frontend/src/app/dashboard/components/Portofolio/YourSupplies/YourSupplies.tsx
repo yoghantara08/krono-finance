@@ -12,6 +12,7 @@ import { formatCurrency } from "@/lib/utils";
 
 import WithdrawModal from "../../ActionModal/WithdrawModal";
 
+import SuppliesCard from "./SuppliesCard";
 import SuppliesItem from "./SuppliesItem";
 
 export const YOUR_SUPPLIES_COLUMNS = {
@@ -66,51 +67,52 @@ const YourSupplies = () => {
 
       {isMobile ? (
         <>
-          {/* <SuppliesCard
+          <SuppliesCard
             asset={{
               token: ASSET_LIST.USDC,
-              balance: Number(balances.TEST_USDC / 10n ** 18n),
-              apy: 6,
+              balance: formatCurrency(balances.TEST_USDC),
               withdraw: () => {
                 openWithdrawModal();
                 updateWithdrawAssetItem({
                   token: ASSET_LIST.USDC,
-                  balance: Number(balances.TEST_USDC / 10n ** 18n),
-                  apy: 6,
+                  balance: formatCurrency(balances.TEST_USDC),
+                  apy: "6",
                 });
               },
+              apy: "6",
             }}
           />
           <SuppliesCard
             asset={{
               token: ASSET_LIST.USDT,
-              balance: Number(balances.TEST_USDT / 10n ** 18n),
-              apy: 6,
+              balance: formatCurrency(balances.TEST_USDT),
               withdraw: () => {
                 openWithdrawModal();
                 updateWithdrawAssetItem({
                   token: ASSET_LIST.USDT,
-                  balance: Number(balances.TEST_USDT / 10n ** 18n),
-                  apy: 6,
+                  balance: formatCurrency(balances.TEST_USDT),
+                  apy: "6",
                 });
               },
+              apy: "6",
             }}
           />
+
           <SuppliesCard
             asset={{
               token: ASSET_LIST.WBTC,
-              balance: Number(balances.TEST_WBTC / 10n ** 18n),
+              balance: formatCurrency(balances.TEST_WBTC),
               withdraw: () => {
                 openWithdrawModal();
                 updateWithdrawAssetItem({
                   token: ASSET_LIST.WBTC,
-                  balance: Number(balances.TEST_WBTC / 10n ** 18n),
-                  apy: 6,
+                  balance: formatCurrency(balances.TEST_WBTC),
+                  apy: "0",
                 });
               },
-              apy: 0,
+              apy: "0",
             }}
-          /> */}
+          />
         </>
       ) : (
         <>

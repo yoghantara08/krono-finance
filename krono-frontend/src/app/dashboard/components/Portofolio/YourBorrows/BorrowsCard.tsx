@@ -24,7 +24,7 @@ const BorrowsCard = ({ asset }: BorrowsItemProps) => {
 
       <div className="flex items-center justify-between text-sm">
         <p>Balance</p>
-        <div>
+        <div className="text-end">
           <p>{debt ?? "-"}</p>
           <p className="text-xs text-secondary">${debt}</p>
         </div>

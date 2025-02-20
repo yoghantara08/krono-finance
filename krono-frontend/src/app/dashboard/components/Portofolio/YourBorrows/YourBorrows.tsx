@@ -12,6 +12,7 @@ import { formatCurrency } from "@/lib/utils";
 
 import RepayModal from "../../ActionModal/RepayModal";
 
+import BorrowsCard from "./BorrowsCard";
 import BorrowsItem from "./BorrowsItem";
 
 export const YOUR_BORROWS_COLUMNS = {
@@ -62,21 +63,36 @@ const YourBorrows = () => {
 
       {isMobile ? (
         <>
-          {/* <BorrowsCard
-          asset={{
-            token: ASSET_LIST.USDC,
-            debt: 100,
-            apy: 5,
-            repay: () => {
-              openRepayModal();
-              updateRepayAssetItem({
-                token: ASSET_LIST.USDC,
-                debt: 100,
-                apy: 5,
-              });
-            },
-          }}
-        /> */}
+          <BorrowsCard
+            asset={{
+              token: ASSET_LIST.USDC,
+              debt: formatCurrency(debts.TEST_USDC),
+              apy: "5",
+              repay: () => {
+                openRepayModal();
+                updateRepayAssetItem({
+                  token: ASSET_LIST.USDC,
+                  debt: formatCurrency(debts.TEST_USDC),
+                  apy: "5",
+                });
+              },
+            }}
+          />
+          <BorrowsCard
+            asset={{
+              token: ASSET_LIST.USDT,
+              debt: formatCurrency(debts.TEST_USDT),
+              apy: "5",
+              repay: () => {
+                openRepayModal();
+                updateRepayAssetItem({
+                  token: ASSET_LIST.USDT,
+                  debt: formatCurrency(debts.TEST_USDT),
+                  apy: "5",
+                });
+              },
+            }}
+          />
         </>
       ) : (
         <>

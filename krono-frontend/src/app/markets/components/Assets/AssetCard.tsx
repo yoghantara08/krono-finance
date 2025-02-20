@@ -2,6 +2,8 @@ import React from "react";
 
 import Image from "next/image";
 
+import BigNumber from "bignumber.js";
+
 import Button from "@/components/Button/Button";
 
 import useLendBorrow from "../../hooks/useLendBorrow";
@@ -14,10 +16,18 @@ const AssetCard = ({ asset }: AssetItemProps) => {
 
   const { updateLendAssetItem, updateBorrowAssetItem } = useLendBorrow();
 
-  const usdValue =
-    (Number(totalSupplied) / 10 ** 18) * (Number(token.price) / 10 ** 18);
-  const borrowUsdValue =
-    (Number(totalBorrowed) / 10 ** 18) * (Number(token.price) / 10 ** 18);
+  const bnTotalSupplied = BigNumber(totalSupplied || "0").div(
+    BigNumber(10).pow(18),
+  );
+  const bnTotalBorrowed = BigNumber(totalBorrowed || "0").div(
+    BigNumber(10).pow(18),
+  );
+
+  const usdValue = bnTotalSupplied.times(token.price).toFixed(2).toString();
+  const borrowUsdValue = bnTotalBorrowed
+    .times(token.price)
+    .toFixed(2)
+    .toString();
 
   return (
     <div className="w-full space-y-4 rounded-md border bg-surface p-3">
@@ -36,7 +46,7 @@ const AssetCard = ({ asset }: AssetItemProps) => {
           <div className="text-end">
             <p>{(Number(totalSupplied) / 10 ** 18).toFixed(2) || "-"}</p>
             <p className="text-xs text-secondary">
-              ${usdValue.toLocaleString()}
+              ${BigNumber(usdValue).toFormat()}
             </p>
           </div>
         </div>
@@ -54,7 +64,7 @@ const AssetCard = ({ asset }: AssetItemProps) => {
           <div>
             <p>{(Number(totalBorrowed) / 10 ** 18).toFixed(2) || "-"}</p>
             <p className="text-xs text-secondary">
-              ${borrowUsdValue.toLocaleString()}
+              ${BigNumber(borrowUsdValue).toFormat()}
             </p>
           </div>
         </div>
